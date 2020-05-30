@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "POPBlog.Database": {
+      "commandName": "Project",
+      "commandLineArgs": "server=localhost;Database=popblog;Trusted_Connection=True;"
+    }
+  }
+}
