@@ -3,14 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POPBlog", "src\POPBlog\POPBlog.csproj", "{8BE87874-6DB8-479E-8DC2-47700A39449A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PopBlog.Web", "src\PopBlog.Web\PopBlog.Web.csproj", "{8BE87874-6DB8-479E-8DC2-47700A39449A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POPBlog.Database", "src\POPBlog.Database\POPBlog.Database.csproj", "{5BB15436-82B5-4663-941B-6700C5A6D80E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PopBlog.Database", "src\PopBlog.Database\PopBlog.Database.csproj", "{5BB15436-82B5-4663-941B-6700C5A6D80E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C8316C5B-3622-4274-AD9F-F4A3CF28F2CB}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PopBlog.Mvc", "src\PopBlog.Mvc\PopBlog.Mvc.csproj", "{21D8DDC4-8FAA-49DC-B5E9-0FC579F2C199}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{5BB15436-82B5-4663-941B-6700C5A6D80E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5BB15436-82B5-4663-941B-6700C5A6D80E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5BB15436-82B5-4663-941B-6700C5A6D80E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21D8DDC4-8FAA-49DC-B5E9-0FC579F2C199}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21D8DDC4-8FAA-49DC-B5E9-0FC579F2C199}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21D8DDC4-8FAA-49DC-B5E9-0FC579F2C199}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21D8DDC4-8FAA-49DC-B5E9-0FC579F2C199}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

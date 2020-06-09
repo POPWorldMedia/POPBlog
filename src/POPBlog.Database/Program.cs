@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using DbUp;
 
-namespace POPBlog.Database
+namespace PopBlog.Database
 {
 	class Program
 	{
