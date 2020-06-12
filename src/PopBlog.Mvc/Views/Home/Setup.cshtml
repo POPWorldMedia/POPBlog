@@ -1,0 +1,24 @@
+﻿@model object
+
+@{
+	ViewBag.Title = "POP Blog Setup";
+	Layout = "_Layout";
+}
+
+<h1>POP Blog Setup</h1>
+
+<form method="post">
+	<div class="form-group">
+		<label for="Name">Name</label>
+		<input type="text" class="form-control" id="Name">
+	</div>
+	<div class="form-group">
+		<label for="Email">Email address</label>
+		<input type="email" class="form-control" id="Email">
+	</div>
+	<div class="form-group">
+		<label for="Password">Password</label>
+		<input type="password" class="form-control" id="Password">
+	</div>
+	<button type="submit" class="btn btn-primary">Submit</button>
+</form>
