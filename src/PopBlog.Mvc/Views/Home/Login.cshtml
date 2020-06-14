@@ -1,5 +1,8 @@
-﻿@{
+﻿@using PopBlog.Mvc
+@inject IConfig Config;
+@{
 	Layout = "_Layout";
+	var recaptchaKey = Config.ReCaptchaSiteKey;
 }
 <h1>Login</h1>
 
@@ -14,5 +17,14 @@
 		<label for="password">Password</label>
 		<input type="password" id="password" name="password" class="form-control" />
 	</div>
+	<input type="hidden" name="Token" id="Token" />
 	<button type="submit" class="btn btn-primary">Login</button>
 </form>
+<script src="https://www.google.com/recaptcha/api.js?render=@recaptchaKey"></script>
+<script>
+	grecaptcha.ready(function() {
+		grecaptcha.execute("@recaptchaKey", { action: "signup" }).then(function (token) {
+			$("#Token").val(token);
+		});
+	});
+</script>

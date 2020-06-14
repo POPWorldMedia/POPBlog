@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -13,10 +14,12 @@ namespace PopBlog.Mvc.Controllers
 	public class HomeController : Controller
 	{
 		private readonly IUserService _userService;
+		private readonly IReCaptchaService _reCaptchaService;
 
-		public HomeController(IUserService userService)
+		public HomeController(IUserService userService, IReCaptchaService reCaptchaService)
 		{
 			_userService = userService;
+			_reCaptchaService = reCaptchaService;
 		}
 
 		[HttpGet("/")]
@@ -55,8 +58,15 @@ namespace PopBlog.Mvc.Controllers
 		}
 
 		[HttpPost("/login")]
-		public async Task<IActionResult> Login(string email, string password, bool rememberMe)
+		public async Task<IActionResult> Login(string email, string password, string token)
 		{
+			var ip = HttpContext.Connection.RemoteIpAddress.ToString();
+			var reCaptchaResult = await _reCaptchaService.VerifyToken(token, ip);
+			if (!reCaptchaResult.IsSuccess)
+			{
+				ModelState.AddModelError("token", $"I don't think you're for real. {reCaptchaResult.ErrorCodes.FirstOrDefault()}");
+				return View();
+			}
 			if (await _userService.IsValidUser(email, password))
 			{
 				var user = await _userService.GetUserByEmail(email);
@@ -64,9 +74,8 @@ namespace PopBlog.Mvc.Controllers
 					throw new Exception($"Weird, there was no user with the email {email}.");
 				var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Name), new Claim(ClaimTypes.Role, "Admin") };
 
-				var props = new AuthenticationProperties { IsPersistent = rememberMe };
-				if (rememberMe)
-					props.ExpiresUtc = DateTime.UtcNow.AddYears(1);
+				var props = new AuthenticationProperties { IsPersistent = true };
+				props.ExpiresUtc = DateTime.UtcNow.AddYears(1);
 
 				var id = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 				await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id), props);

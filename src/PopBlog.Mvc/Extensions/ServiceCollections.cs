@@ -13,6 +13,7 @@ namespace PopBlog.Mvc.Extensions
 			serviceCollection.AddTransient<IUserRepository, UserRepository>();
 
 			serviceCollection.AddTransient<IUserService, UserService>();
+			serviceCollection.AddTransient<IReCaptchaService, ReCaptchaService>();
 
 			return serviceCollection;
 		}
