@@ -24,7 +24,7 @@ namespace PopBlog.Mvc.Controllers
 		public async Task<IActionResult> Setup()
 		{
 			if (await _userService.IsFirstUserCreated())
-				return Forbid();
+				return StatusCode(403);
 			return View();
 		}
 
@@ -32,7 +32,7 @@ namespace PopBlog.Mvc.Controllers
 		public async Task<IActionResult> Setup(User user)
 		{
 			if (await _userService.IsFirstUserCreated())
-				return Forbid();
+				return StatusCode(403);
 			await _userService.Create(user);
 			return RedirectToAction("Index");
 		}

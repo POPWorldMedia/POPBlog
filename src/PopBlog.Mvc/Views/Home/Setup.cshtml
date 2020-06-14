@@ -1,4 +1,4 @@
-﻿@model object
+﻿@model PopBlog.Mvc.Models.User
 
 @{
 	ViewBag.Title = "POP Blog Setup";
@@ -7,18 +7,18 @@
 
 <h1>POP Blog Setup</h1>
 
-<form method="post">
+<form method="post" asp-controller="Home" asp-action="Setup">
 	<div class="form-group">
 		<label for="Name">Name</label>
-		<input type="text" class="form-control" id="Name">
+		<input type="text" class="form-control" asp-for="Name">
 	</div>
 	<div class="form-group">
 		<label for="Email">Email address</label>
-		<input type="email" class="form-control" id="Email">
+		<input type="email" class="form-control" asp-for="Email">
 	</div>
 	<div class="form-group">
 		<label for="Password">Password</label>
-		<input type="password" class="form-control" id="Password">
+		<input type="password" class="form-control" asp-for="Password">
 	</div>
 	<button type="submit" class="btn btn-primary">Submit</button>
 </form>

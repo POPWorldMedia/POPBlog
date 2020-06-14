@@ -1,8 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
+	  <AssemblyName>PopBlog.Mvc</AssemblyName>
+	  <PackageId>PopBlog.Mvc</PackageId>
+	  <AssemblyVersion>0.99.0</AssemblyVersion>
+		<Description>A Razor class library with logic to render a simple blog engine.</Description>
+		<Authors>Jeff Putz</Authors>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+	  <PackageProjectUrl>https://github.com/POPWorldMedia/POPBlog</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/POPWorldMedia/POPBlog</RepositoryUrl>
+	  <Copyright>2020, POP World Media, LLC</Copyright>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
