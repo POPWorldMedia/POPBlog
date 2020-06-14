@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PopBlog.Mvc.Extensions;
+using PopBlog.Mvc.Services;
 
 namespace PopBlog.Web
 {
@@ -20,6 +22,11 @@ namespace PopBlog.Web
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllersWithViews();
+
+			services.AddAuthentication(options => options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme)
+				.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options => options.LoginPath = "/");
+
+			services.AddAuthorization(options => options.AddPolicy("Admin", authBuilder => authBuilder.RequireAuthenticatedUser()));
 
 			services.AddPopBlogServices();
 		}
@@ -39,6 +46,8 @@ namespace PopBlog.Web
 			}
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
+
+			app.UseMiddleware<UserMiddleware>();
 
 			app.UseRouting();
 

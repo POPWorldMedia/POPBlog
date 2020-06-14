@@ -9,6 +9,8 @@ namespace PopBlog.Mvc.Services
 	{
 		Task<bool> IsFirstUserCreated();
 		Task Create(User user);
+		Task<bool> IsValidUser(string email, string password);
+		Task<User> GetUserByEmail(string email);
 	}
 
 	public class UserService : IUserService
@@ -29,6 +31,18 @@ namespace PopBlog.Mvc.Services
 		{
 			user.Password = user.Password.GetSHA256Hash();
 			await _userRepository.Create(user);
+		}
+
+		public async Task<bool> IsValidUser(string email, string password)
+		{
+			var hashedPassword = password.GetSHA256Hash();
+			var isValidUser = await _userRepository.IsValidUser(email, hashedPassword);
+			return isValidUser;
+		}
+
+		public async Task<User> GetUserByEmail(string email)
+		{
+			return await _userRepository.GetUserByEmail(email);
 		}
 	}
 }
