@@ -7,6 +7,7 @@ namespace PopBlog.Mvc
 		string ConnectionString { get; }
 		string ReCaptchaSiteKey { get; }
 		string ReCaptchaSecretKey { get; }
+		string BlogTitle { get; }
 	}
 
 	public class Config : IConfig
@@ -21,5 +22,6 @@ namespace PopBlog.Mvc
 		public string ConnectionString => _configuration["PopBlogConnectionString"];
 		public string ReCaptchaSiteKey => _configuration["ReCaptchaSiteKey"];
 		public string ReCaptchaSecretKey => _configuration["ReCaptchaSecretKey"];
+		public string BlogTitle => _configuration["BlogTitle"];
 	}
 }

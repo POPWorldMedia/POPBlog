@@ -1,7 +1,7 @@
 ﻿@using PopBlog.Mvc
 @inject IConfig Config;
 @{
-	Layout = "_Layout";
+	ViewBag.Title = "Login - ";
 	var recaptchaKey = Config.ReCaptchaSiteKey;
 }
 <h1>Login</h1>
