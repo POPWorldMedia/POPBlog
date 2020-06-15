@@ -11,6 +11,7 @@ namespace PopBlog.Mvc.Services
 		Task Create(User user);
 		Task<bool> IsValidUser(string email, string password);
 		Task<User> GetUserByEmail(string email);
+		Task<User> GetUserByName(string name);
 	}
 
 	public class UserService : IUserService
@@ -43,6 +44,11 @@ namespace PopBlog.Mvc.Services
 		public async Task<User> GetUserByEmail(string email)
 		{
 			return await _userRepository.GetUserByEmail(email);
+		}
+
+		public async Task<User> GetUserByName(string name)
+		{
+			return await _userRepository.GetUserByName(name);
 		}
 	}
 }

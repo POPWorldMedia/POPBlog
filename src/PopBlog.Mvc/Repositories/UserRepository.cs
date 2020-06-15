@@ -12,6 +12,7 @@ namespace PopBlog.Mvc.Repositories
 		Task Create(User user);
 		Task<bool> IsValidUser(string email, string passwordHash);
 		Task<User> GetUserByEmail(string email);
+		Task<User> GetUserByName(string name);
 	}
 
 	public class UserRepository : IUserRepository
@@ -46,7 +47,14 @@ namespace PopBlog.Mvc.Repositories
 		public async Task<User> GetUserByEmail(string email)
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
-			var user = await connection.QuerySingleOrDefaultAsync<User>("SELECT Name, Email FROM Users WHERE Email = @Email", new {Email = email});
+			var user = await connection.QuerySingleOrDefaultAsync<User>("SELECT UserID, Name, Email FROM Users WHERE Email = @Email", new {Email = email});
+			return user;
+		}
+
+		public async Task<User> GetUserByName(string name)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			var user = await connection.QuerySingleOrDefaultAsync<User>("SELECT UserID, Name, Email FROM Users WHERE Name = @Name", new { Name = name });
 			return user;
 		}
 	}
