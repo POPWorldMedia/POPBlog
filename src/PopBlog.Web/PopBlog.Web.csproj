@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Shared\" />
-    <Folder Include="wwwroot\lib\PopBlog\src\" />
   </ItemGroup>
 
 </Project>

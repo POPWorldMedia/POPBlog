@@ -17,5 +17,11 @@ namespace PopBlog.Mvc.Controllers
 		{
 			return View();
 		}
+
+		[HttpGet("/admin/newpost")]
+		public async Task<IActionResult> NewPost()
+		{
+			return View();
+		}
 	}
 }

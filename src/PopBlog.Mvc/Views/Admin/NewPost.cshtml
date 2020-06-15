@@ -1,0 +1,45 @@
+﻿@model PopBlog.Mvc.Models.Post
+@{
+	ViewBag.Title = "New Post";
+	Layout = "AdminLayout";
+}
+@section header
+{
+	<script src="~/lib/PopBlog/dist/TinyHelper.min.js"></script>
+	<script type="text/javascript">
+		initEditor("FullText");
+	</script>
+}
+
+<h1>New Post</h1>
+
+<form asp-action="NewPost" method="POST">
+	<div class="form-group">
+		<label for="Title">Title</label>
+		<input asp-for="Title" class="form-control" />
+	</div>
+	<div class="form-group">
+		<textarea asp-for="FullText" class="form-control" rows="30"></textarea>
+	</div>
+	<div class="form-group">
+		<label for="TimeStamp">Time Stamp</label>
+		<input asp-for="TimeStamp" class="form-control" />
+	</div>
+	<div class="checkbox">
+		<label>
+			<input asp-for="IsPrivate" type="checkbox" /> Is private?
+		</label>
+	</div>
+	<div class="checkbox">
+		<label>
+			<input asp-for="IsClosed" type="checkbox" /> Is closed?
+		</label>
+	</div>
+	<div class="checkbox">
+		<label>
+			<input asp-for="IsLive" type="checkbox" /> Is live?
+		</label>
+	</div>
+
+	<input type="submit" value="Post" class="btn btn-primary" />
+</form>

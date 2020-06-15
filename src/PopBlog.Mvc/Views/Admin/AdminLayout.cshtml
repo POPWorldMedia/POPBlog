@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>@ViewBag.Title - POP Blog Admin</title>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/popper.js/dist/popper.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+	<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+	<script src="~/lib/tinymce/tinymce.min.js"></script>
+	@await RenderSectionAsync("header", required: false)
+</head>
+<body>
+<div class="container my-3">
+	<div class="text-right m-3">
+		<a asp-action="NewPost">New Post</a>
+	</div>
+	@RenderBody()
+</div>
+</body>
+</html>
