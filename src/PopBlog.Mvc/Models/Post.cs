@@ -14,5 +14,6 @@ namespace PopBlog.Mvc.Models
 		public bool IsClosed { get; set; }
 		public bool IsLive { get; set; }
 		public string UrlTitle { get; set; }
+		public string Name { get; set; }
 	}
 }

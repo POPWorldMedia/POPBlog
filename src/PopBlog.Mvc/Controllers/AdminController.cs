@@ -30,7 +30,7 @@ namespace PopBlog.Mvc.Controllers
 		[HttpGet("/admin/newpost")]
 		public IActionResult NewPost()
 		{
-			var post = new Post {TimeStamp = DateTime.UtcNow, IsLive = true};
+			var post = new Post {TimeStamp = DateTime.UtcNow, IsLive = true, Name = User.Identity.Name};
 			return View(post);
 		}
 

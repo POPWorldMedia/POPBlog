@@ -1,0 +1,3 @@
+﻿ALTER TABLE POSTS
+ADD [Name] nvarchar(256) NULL
+GO
