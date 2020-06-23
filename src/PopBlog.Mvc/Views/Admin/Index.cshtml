@@ -1,7 +1,16 @@
-﻿@model object
+﻿@model List<PopBlog.Mvc.Models.Post>
 @{
 	ViewBag.Title = "Home";
 	Layout = "AdminLayout";
 }
 
 <h1>POP Blog Admin</h1>
+
+<h2>Recent posts:</h2>
+
+<ul>
+	@foreach (var post in Model)
+	{
+		<li><a asp-action="EditPost" asp-route-postID="@post.PostID">@post.Title</a> | @post.TimeStamp</li>
+	}
+</ul>

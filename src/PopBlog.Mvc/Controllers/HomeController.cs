@@ -15,17 +15,20 @@ namespace PopBlog.Mvc.Controllers
 	{
 		private readonly IUserService _userService;
 		private readonly IReCaptchaService _reCaptchaService;
+		private readonly IPostService _postService;
 
-		public HomeController(IUserService userService, IReCaptchaService reCaptchaService)
+		public HomeController(IUserService userService, IReCaptchaService reCaptchaService, IPostService postService)
 		{
 			_userService = userService;
 			_reCaptchaService = reCaptchaService;
+			_postService = postService;
 		}
 
 		[HttpGet("/")]
 		public async Task<IActionResult> Index()
 		{
-			return View();
+			var posts = await _postService.GetLast20LiveAndPublic();
+			return View(posts);
 		}
 
 		[HttpGet("/setup")]

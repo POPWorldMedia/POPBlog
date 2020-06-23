@@ -1,6 +1,6 @@
 ﻿@model PopBlog.Mvc.Models.Post
 @{
-	ViewBag.Title = "New Post";
+	ViewBag.Title = "Edit Post";
 	Layout = "AdminLayout";
 }
 @section header
@@ -11,9 +11,9 @@
 	</script>
 }
 
-<h1>New Post</h1>
+<h1>Edit Post</h1>
 
-<form asp-action="NewPost" method="POST">
+<form asp-action="EditPost" method="POST">
 	<div class="form-group">
 		<label for="Title">Title</label>
 		<input asp-for="Title" class="form-control" />

@@ -23,13 +23,14 @@ namespace PopBlog.Mvc.Controllers
 		[HttpGet("/admin")]
 		public async Task<IActionResult> Index()
 		{
-			return View();
+			var last20 = await _postService.GetLast20();
+			return View(last20);
 		}
 
 		[HttpGet("/admin/newpost")]
 		public IActionResult NewPost()
 		{
-			var post = new Post {TimeStamp = DateTime.UtcNow};
+			var post = new Post {TimeStamp = DateTime.UtcNow, IsLive = true};
 			return View(post);
 		}
 
@@ -39,7 +40,24 @@ namespace PopBlog.Mvc.Controllers
 			var user = await _userService.GetUserByName(User.Identity.Name);
 			post.UserID = user.UserID;
 			await _postService.Create(post);
-			return RedirectToAction("Index");
+			return RedirectToAction("Index", "Admin");
+		}
+
+		[HttpGet("/admin/editpost/{postID}")]
+		public async Task<IActionResult> EditPost(int postID)
+		{
+			var post = await _postService.Get(postID);
+			if (post == null)
+				return StatusCode(404);
+			return View(post);
+		}
+
+		[HttpPost("/admin/editpost/{postID}")]
+		public async Task<IActionResult> EditPost(int postID, Post post)
+		{
+			post.PostID = postID;
+			await _postService.Update(post);
+			return RedirectToAction("Index", "Admin");
 		}
 	}
 }
