@@ -1,0 +1,21 @@
+﻿@using PopBlog.Mvc
+@model PopBlog.Mvc.Models.Post
+@inject IConfig Config
+@{
+}
+
+<div class="my-3">
+	<h2 class="blogPostTitle">@Model.Title</h2>
+	<h3 class="blogPostDetails">
+		posted by @Model.Name | @Model.TimeStamp.ToString("dddd, MMMM d, yyyy, h:mm tt") | <a href="#comments">comments</a>: @Model.Replies
+	</h3>
+	<div class="postBody">
+		@Html.Raw(Model.FullText)
+	</div>
+	<hr />
+</div>
+
+<a name="comments"></a>
+<div>
+
+</div>
