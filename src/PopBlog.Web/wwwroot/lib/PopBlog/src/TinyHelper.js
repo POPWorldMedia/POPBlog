@@ -1,5 +1,5 @@
 ﻿function launchImageManager() {
-	tinyMCE.activeEditor.windowManager.open({
+	tinymce.activeEditor.windowManager.openUrl({
 		url: "/Admin/ImageManager",
 		title: "Insert Image",
 		resizable: "no",
@@ -10,12 +10,10 @@
 }
 
 function launchImageFolderManager() {
-	tinyMCE.activeEditor.windowManager.open({
+	tinymce.activeEditor.windowManager.openUrl({
 		url: "/Admin/ImageFolderManager",
 		title: "Manage Image Folders",
-		resizable: "no",
-		inline: "yes",
-		height: 110,
+		height: 250,
 		width: 400
 	});
 }

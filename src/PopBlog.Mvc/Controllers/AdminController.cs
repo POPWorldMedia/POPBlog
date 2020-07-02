@@ -13,11 +13,13 @@ namespace PopBlog.Mvc.Controllers
 	{
 		private readonly IPostService _postService;
 		private readonly IUserService _userService;
+		private readonly IImageService _imageService;
 
-		public AdminController(IPostService postService, IUserService userService)
+		public AdminController(IPostService postService, IUserService userService, IImageService imageService)
 		{
 			_postService = postService;
 			_userService = userService;
+			_imageService = imageService;
 		}
 
 		[HttpGet("/admin")]
@@ -58,6 +60,39 @@ namespace PopBlog.Mvc.Controllers
 			post.PostID = postID;
 			await _postService.Update(post);
 			return RedirectToAction("Index", "Admin");
+		}
+
+		[HttpGet("/Admin/ImageManager")]
+		public IActionResult ImageManager()
+		{
+			return View();
+		}
+
+		[HttpGet("/Admin/ImageFolderManager")]
+		public IActionResult ImageFolderManager()
+		{
+			return View();
+		}
+
+		[HttpGet("/Admin/GetFolderList")]
+		public async Task<IActionResult> GetFolderList()
+		{
+			var list = await _imageService.GetAllImageFolders();
+			return Json(list);
+		}
+
+		[HttpPost("/Admin/AddImageFolder")]
+		public async Task<IActionResult> AddImageFolder(ImageFolder imageFolder)
+		{
+			await _imageService.CreateImageFolder(imageFolder);
+			return new EmptyResult();
+		}
+
+		[HttpPost("/Admin/DeleteImageFolder")]
+		public async Task<IActionResult> DeleteImageFolder(int imageFolderID)
+		{
+			await _imageService.DeleteImageFolder(imageFolderID);
+			return new EmptyResult();
 		}
 	}
 }
