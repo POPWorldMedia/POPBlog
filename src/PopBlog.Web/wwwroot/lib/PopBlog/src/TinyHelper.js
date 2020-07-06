@@ -2,8 +2,6 @@
 	tinymce.activeEditor.windowManager.openUrl({
 		url: "/Admin/ImageManager",
 		title: "Insert Image",
-		resizable: "no",
-		inline: "yes",
 		height: 570,
 		width: 680
 	});

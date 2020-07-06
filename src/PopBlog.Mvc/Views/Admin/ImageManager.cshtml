@@ -1,5 +1,8 @@
-﻿@{
+﻿@using PopBlog.Mvc.Models
+@{
 	Layout = null;
+	var folders = ((IEnumerable<ImageFolder>) ViewBag.Folders).Select(x => new SelectListItem(x.Name, x.ImageFolderID.ToString()));
+
 }
 <!DOCTYPE html>
 <html>
@@ -15,14 +18,14 @@
 		var imageID = "";
 		$(function () {
 			var folderSelect = $("#FolderList");
-			getImages(folderSelect.value);
+			getImages(0);
 			folderSelect.bind("change", function (event) {
 				getImages(this.value);
 			});
 			$("#SelectionButton").click(function (event) {
 				if (imageID != "")
-					tinyMCEPopup.execCommand("mceInsertContent", false, '<img src="/Post/Image/' + imageID + '" />');
-				tinyMCEPopup.close();
+					tinymce.activeEditor.execCommand("mceInsertContent", false, '<img src="/Post/Image/' + imageID + '" />');
+				tinymce.activeEditor.windowManager.close();
 			});
 			var newImageID = $("#NewImageID").val();
 			if (newImageID != "") {
@@ -51,23 +54,25 @@
 </head>
 <body>
 	<form asp-action="ImageManager" asp-controller="Admin" enctype="multipart/form-data" method="POST">
-		<input type="hidden" id="NewImageID" name="NewImageID" value="@ViewData["NewImageID"]" />
-		<div id="ImageManager">
-			<div id="Navigator">
-				Folder: @Html.DropDownList("FolderList", ViewData["Folders"] as SelectList)
+		<input type="hidden" id="NewImageID" name="NewImageID" value="" />
+		<div id="ImageManager" class="row">
+			<div id="Navigator" class="col col-3 border-right">
+				Folder: @Html.DropDownList("FolderList", folders)
 				<div id="List"></div>
 			</div>
-			<div id="Preview">
-				<p id="PreviewName"></p>
-				<img id="PreviewImage" alt="" src="" />
+			<div class="col col-md-auto">
+				<div id="Preview">
+					<p id="PreviewName"></p>
+					<img id="PreviewImage" alt="" src="" />
+				</div>
+				<div id="Upload">
+					<p>Upload to current folder:</p>
+					<input type="file" id="ImageUpload" name="ImageUpload" />
+					<input type="submit" value="Upload" />
+				</div>
 			</div>
-			<div id="Upload">
-				<p>Upload to current folder:</p>
-				<input type="file" id="ImageUpload" name="ImageUpload" />
-				<input type="submit" value="Upload" />
-			</div>
-			<input id="SelectionButton" name="SelectionButton" type="button" value="OK" />
 		</div>
+		<input id="SelectionButton" name="SelectionButton" type="button" value="OK" />
 	</form>
 </body>
 </html>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -63,8 +64,12 @@ namespace PopBlog.Mvc.Controllers
 		}
 
 		[HttpGet("/Admin/ImageManager")]
-		public IActionResult ImageManager()
+		public async Task<IActionResult> ImageManager()
 		{
+			var folders = await _imageService.GetAllImageFolders();
+			var list = folders.ToList();
+			list.Insert(0, new ImageFolder { ImageFolderID = 0, Name = "Root Folder" });
+			ViewBag.Folders = list;
 			return View();
 		}
 
@@ -93,6 +98,14 @@ namespace PopBlog.Mvc.Controllers
 		{
 			await _imageService.DeleteImageFolder(imageFolderID);
 			return new EmptyResult();
+		}
+
+		[HttpGet("/Admin/GetImages/{id}")]
+		public async Task<IActionResult> GetImages(int id)
+		{
+			int? imageFolderID = id == 0 ? (int?)null : id;
+			var list = await _imageService.GetImagesByFolder(imageFolderID);
+			return Json(list);
 		}
 	}
 }
