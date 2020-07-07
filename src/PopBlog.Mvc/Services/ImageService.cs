@@ -12,6 +12,9 @@ namespace PopBlog.Mvc.Services
 		Task CreateImageFolder(ImageFolder imageFolder);
 		Task DeleteImageFolder(int imageFolderID);
 		Task<IEnumerable<Image>> GetImagesByFolder(int? imageFolderID);
+		Task<int> CreateImage(byte[] bytes, string fileName, string mimeType, int? imageFolderID);
+		Task<Image> GetImage(int imageID);
+		Task<byte[]> GetImageData(int imageID);
 	}
 
 	public class ImageService : IImageService
@@ -44,6 +47,28 @@ namespace PopBlog.Mvc.Services
 		public async Task<IEnumerable<Image>> GetImagesByFolder(int? imageFolderID)
 		{
 			return await _imageRepository.GetImagesByFolder(imageFolderID);
+		}
+
+		public async Task<int> CreateImage(byte[] bytes, string fileName, string mimeType, int? imageFolderID)
+		{
+			var image = new Image
+			{
+				FileName = fileName,
+				ImageFolderID = imageFolderID,
+				MimeType = mimeType,
+				TimeStamp = DateTime.UtcNow
+			};
+			return await _imageRepository.Create(bytes, image);
+		}
+
+		public async Task<Image> GetImage(int imageID)
+		{
+			return await _imageRepository.GetImage(imageID);
+		}
+
+		public async Task<byte[]> GetImageData(int imageID)
+		{
+			return await _imageRepository.GetImageData(imageID);
 		}
 	}
 }

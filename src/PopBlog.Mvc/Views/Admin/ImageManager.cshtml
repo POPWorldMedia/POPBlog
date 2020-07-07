@@ -19,17 +19,17 @@
 		$(function () {
 			var folderSelect = $("#FolderList");
 			getImages(0);
-			folderSelect.bind("change", function (event) {
+			folderSelect.on("change", function () {
 				getImages(this.value);
 			});
-			$("#SelectionButton").click(function (event) {
+			$("#SelectionButton").click(function () {
 				if (imageID != "")
-					tinymce.activeEditor.execCommand("mceInsertContent", false, '<img src="/Post/Image/' + imageID + '" />');
-				tinymce.activeEditor.windowManager.close();
+					window.parent.postMessage({ mceAction: "execCommand", cmd: "mceInsertContent", value: '<img src="/Post/Image/' + imageID + '" />' });
+				window.parent.postMessage({mceAction: "close"});
 			});
 			var newImageID = $("#NewImageID").val();
 			if (newImageID != "") {
-				$.getJSON("/Admin/GetImageData/" + newImageID, function (result) {
+				$.getJSON("/Admin/GetImageInfo/" + newImageID, function (result) {
 					loadImage(result.imageID, result.fileName);
 					$("#FolderList").val(result.imageFolderID);
 					$("#FolderList").trigger("change");
@@ -53,26 +53,28 @@
 	</script>
 </head>
 <body>
-	<form asp-action="ImageManager" asp-controller="Admin" enctype="multipart/form-data" method="POST">
-		<input type="hidden" id="NewImageID" name="NewImageID" value="" />
-		<div id="ImageManager" class="row">
+	<form asp-action="ImageManager" asp-controller="Admin" enctype="multipart/form-data" method="POST" class="px-3">
+		<input type="hidden" id="NewImageID" name="NewImageID" value="@ViewBag.NewImageID" />
+		<div id="ImageManager" class="row" style="height:470px;">
 			<div id="Navigator" class="col col-3 border-right">
-				Folder: @Html.DropDownList("FolderList", folders)
-				<div id="List"></div>
+				<small>Folder:</small> @Html.DropDownList("FolderList", folders)
+				<div id="List" class="overflow-auto" style="font-size:75%;"></div>
 			</div>
-			<div class="col col-md-auto">
-				<div id="Preview">
+			<div class="col col-9">
+				<div id="Upload">
+					<small>Upload to current folder:</small>
+					<input type="file" id="ImageUpload" name="ImageUpload" class="col-4" />
+					<input type="submit" value="Upload" class="ml-3 btn btn-primary" />
+				</div>
+				<div id="Preview" class="overflow-auto" style="max-height: 420px;">
 					<p id="PreviewName"></p>
 					<img id="PreviewImage" alt="" src="" />
 				</div>
-				<div id="Upload">
-					<p>Upload to current folder:</p>
-					<input type="file" id="ImageUpload" name="ImageUpload" />
-					<input type="submit" value="Upload" />
-				</div>
 			</div>
 		</div>
-		<input id="SelectionButton" name="SelectionButton" type="button" value="OK" />
+		<div class="row m-2 float-right">
+			<input id="SelectionButton" name="SelectionButton" type="button" value="OK" class="btn btn-primary" />
+		</div>
 	</form>
 </body>
 </html>

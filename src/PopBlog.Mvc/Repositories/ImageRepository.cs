@@ -10,6 +10,9 @@ namespace PopBlog.Mvc.Repositories
 	{
 		Task RemoveImagesFromFolder(int imageFolderID);
 		Task<IEnumerable<Image>> GetImagesByFolder(int? imageFolderID);
+		Task<int> Create(byte[] bytes, Image image);
+		Task<Image> GetImage(int imageID);
+		Task<byte[]> GetImageData(int imageID);
 	}
 
 	public class ImageRepository : IImageRepository
@@ -29,9 +32,35 @@ namespace PopBlog.Mvc.Repositories
 
 		public async Task<IEnumerable<Image>> GetImagesByFolder(int? imageFolderID)
 		{
+			string sql;
+			if (imageFolderID.HasValue)
+				sql = "SELECT ImageID, MimeType, FileName, ImageFolderID, TimeStamp FROM Images WHERE ImageFolderID = @ImageFolderID";
+			else
+				sql = "SELECT ImageID, MimeType, FileName, ImageFolderID, TimeStamp FROM Images WHERE ImageFolderID IS NULL";
 			await using var connection = new SqlConnection(_config.ConnectionString);
-			var images = await connection.QueryAsync<Image>("SELECT ImageID, MimeType, FileName, ImageFolderID, TimeStamp FROM Images WHERE ImageFolderID = @ImageFolderID", new {ImageFolderID = imageFolderID});
+			var images = await connection.QueryAsync<Image>(sql, new {ImageFolderID = imageFolderID});
 			return images;
+		}
+
+		public async Task<int> Create(byte[] bytes, Image image)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			var imageID = connection.QuerySingleAsync<int>("INSERT INTO Images (MimeType, FileName, ImageFolderID, [TimeStamp], ImageBytes) VALUES (@MimeType, @FileName, @ImageFolderID, @TimeStamp, @ImageBytes);SELECT CAST(SCOPE_IDENTITY() as int)", new { image.MimeType, image.FileName, image.ImageFolderID, image.TimeStamp, ImageBytes = bytes });
+			return await imageID;
+		}
+
+		public async Task<Image> GetImage(int imageID)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			var image = await connection.QuerySingleOrDefaultAsync<Image>("SELECT ImageID, MimeType, FileName, ImageFolderID, TimeStamp FROM Images WHERE ImageID = @ImageID", new { ImageID = imageID });
+			return image;
+		}
+
+		public async Task<byte[]> GetImageData(int imageID)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			var image = await connection.QuerySingleOrDefaultAsync<byte[]>("SELECT ImageBytes FROM Images WHERE ImageID = @ImageID", new { ImageID = imageID });
+			return image;
 		}
 	}
 }
