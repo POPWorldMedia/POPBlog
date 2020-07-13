@@ -1,0 +1,13 @@
+﻿@using System.Globalization
+@model IEnumerable<PopBlog.Mvc.Models.MonthCount>
+@{
+}
+
+<h1>Archive</h1>
+
+<ul>
+@foreach (var item in Model)
+{
+	<li><a asp-controller="Archive" asp-action="Month" asp-route-month="@item.Month" asp-route-year="@item.Year">@CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(item.Month), @item.Year (@item.Count)</a></li>
+}
+</ul>

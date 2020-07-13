@@ -6,7 +6,7 @@
 }
 
 <div class="my-3">
-	<h2 class="blogPostTitle">@Model.Title</h2>
+	<h1 class="blogPostTitle">@Model.Title</h1>
 	<h3 class="blogPostDetails">
 		posted by @Model.Name | @Model.TimeStamp.ToString("dddd, MMMM d, yyyy, h:mm tt") | <a href="#comments">comments</a>: @Model.Replies
 		@if (User.HasClaim(ClaimTypes.Role, "Admin"))

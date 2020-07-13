@@ -1,8 +1,11 @@
-﻿@using PopBlog.Mvc
+﻿@using System.Globalization
+@using PopBlog.Mvc
 @model IEnumerable<PopBlog.Mvc.Models.Post>
 @inject IConfig Config
 @{
 }
+
+<h1>Archive: @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(ViewBag.Month), @ViewBag.Year</h1>
 
 @foreach (var item in Model)
 {

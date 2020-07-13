@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System;
+using Microsoft.Extensions.Configuration;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace PopBlog.Mvc
 {
@@ -9,6 +11,7 @@ namespace PopBlog.Mvc
 		string ReCaptchaSecretKey { get; }
 		string BlogTitle { get; }
 		string BlogDescription { get; }
+		double TimeZone { get; }
 	}
 
 	public class Config : IConfig
@@ -25,5 +28,6 @@ namespace PopBlog.Mvc
 		public string ReCaptchaSecretKey => _configuration["ReCaptchaSecretKey"];
 		public string BlogTitle => _configuration["BlogTitle"];
 		public string BlogDescription => _configuration["BlogDescription"];
+		public double TimeZone => Convert.ToDouble(_configuration["TimeZone"]);
 	}
 }

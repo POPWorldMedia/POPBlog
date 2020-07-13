@@ -23,6 +23,9 @@
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
+				<li class="nav-item">
+					<a class="nav-link" asp-controller="Archive" asp-action="Index">Archive</a>
+				</li>
 				@if (User.HasClaim(ClaimTypes.Role, "Admin"))
 				{
 					<li class="nav-item">
