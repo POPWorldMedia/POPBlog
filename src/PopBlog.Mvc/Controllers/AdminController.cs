@@ -18,12 +18,14 @@ namespace PopBlog.Mvc.Controllers
 		private readonly IPostService _postService;
 		private readonly IUserService _userService;
 		private readonly IImageService _imageService;
+		private readonly ITimeAdjustService _timeAdjustService;
 
-		public AdminController(IPostService postService, IUserService userService, IImageService imageService)
+		public AdminController(IPostService postService, IUserService userService, IImageService imageService, ITimeAdjustService timeAdjustService)
 		{
 			_postService = postService;
 			_userService = userService;
 			_imageService = imageService;
+			_timeAdjustService = timeAdjustService;
 		}
 
 		[HttpGet("/admin")]
@@ -36,7 +38,8 @@ namespace PopBlog.Mvc.Controllers
 		[HttpGet("/admin/newpost")]
 		public IActionResult NewPost()
 		{
-			var post = new Post {TimeStamp = DateTime.UtcNow, IsLive = true, Name = User.Identity.Name};
+			var currentTime = _timeAdjustService.GetAdjustedTime(DateTime.UtcNow);
+			var post = new Post {TimeStamp = currentTime, IsLive = true, Name = User.Identity.Name};
 			return View(post);
 		}
 

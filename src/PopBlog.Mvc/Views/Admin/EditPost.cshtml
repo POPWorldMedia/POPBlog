@@ -29,11 +29,7 @@
 		<label for="TimeStamp">Time Stamp</label>
 		<input asp-for="TimeStamp" class="form-control" />
 	</div>
-	<div class="checkbox">
-		<label>
-			<input asp-for="IsPrivate" type="checkbox" /> Is private?
-		</label>
-	</div>
+	<input asp-for="IsPrivate" type="hidden" />
 	<div class="checkbox">
 		<label>
 			<input asp-for="IsClosed" type="checkbox" /> Is closed?
