@@ -15,6 +15,7 @@ namespace PopBlog.Mvc.Extensions
 			serviceCollection.AddTransient<IImageFolderRepository, ImageFolderRepository>();
 			serviceCollection.AddTransient<IImageRepository, ImageRepository>();
 			serviceCollection.AddTransient<IContentRepository, ContentRepository>();
+			serviceCollection.AddTransient<ICommentRepository, CommentRepository>();
 
 			serviceCollection.AddTransient<IUserService, UserService>();
 			serviceCollection.AddTransient<IReCaptchaService, ReCaptchaService>();
@@ -22,6 +23,8 @@ namespace PopBlog.Mvc.Extensions
 			serviceCollection.AddTransient<IImageService, ImageService>();
 			serviceCollection.AddTransient<ITimeAdjustService, TimeAdjustService>();
 			serviceCollection.AddTransient<IContentService, ContentService>();
+			serviceCollection.AddTransient<ICommentService, CommentService>();
+			serviceCollection.AddTransient<ITextParsingService, TextParsingService>();
 
 			return serviceCollection;
 		}
