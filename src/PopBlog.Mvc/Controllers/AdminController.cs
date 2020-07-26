@@ -19,13 +19,15 @@ namespace PopBlog.Mvc.Controllers
 		private readonly IUserService _userService;
 		private readonly IImageService _imageService;
 		private readonly ITimeAdjustService _timeAdjustService;
+		private readonly IContentService _contentService;
 
-		public AdminController(IPostService postService, IUserService userService, IImageService imageService, ITimeAdjustService timeAdjustService)
+		public AdminController(IPostService postService, IUserService userService, IImageService imageService, ITimeAdjustService timeAdjustService, IContentService contentService)
 		{
 			_postService = postService;
 			_userService = userService;
 			_imageService = imageService;
 			_timeAdjustService = timeAdjustService;
+			_contentService = contentService;
 		}
 
 		[HttpGet("/admin")]
@@ -157,6 +159,39 @@ namespace PopBlog.Mvc.Controllers
 		{
 			var image = await _imageService.GetImage(id);
 			return Json(image);
+		}
+
+		[HttpGet("/admin/content")]
+		public async Task<IActionResult> Content()
+		{
+			var content = await _contentService.GetAll();
+			foreach (var item in content)
+				item.LastUpdated = _timeAdjustService.GetAdjustedTime(item.LastUpdated);
+			return View(content);
+		}
+
+		[HttpPost("/admin/newcontent")]
+		public async Task<IActionResult> NewContent(Content content)
+		{
+			await _contentService.Create(content);
+			return RedirectToAction("EditContent", new {id = content.ContentID});
+		}
+
+		[HttpGet("/admin/editcontent/{id}")]
+		public async Task<IActionResult> EditContent(string id)
+		{
+			var content = await _contentService.Get(id);
+			if (content == null)
+				return StatusCode(404);
+			content.LastUpdated = _timeAdjustService.GetAdjustedTime(content.LastUpdated);
+			return View(content);
+		}
+
+		[HttpPost("/admin/editcontent/{id}")]
+		public async Task<IActionResult> EditContent(string id, Content content)
+		{
+			await _contentService.Update(id, content);
+			return RedirectToAction("Content");
 		}
 	}
 }

@@ -14,12 +14,14 @@ namespace PopBlog.Mvc.Extensions
 			serviceCollection.AddTransient<IPostRepository, PostRepository>();
 			serviceCollection.AddTransient<IImageFolderRepository, ImageFolderRepository>();
 			serviceCollection.AddTransient<IImageRepository, ImageRepository>();
+			serviceCollection.AddTransient<IContentRepository, ContentRepository>();
 
 			serviceCollection.AddTransient<IUserService, UserService>();
 			serviceCollection.AddTransient<IReCaptchaService, ReCaptchaService>();
 			serviceCollection.AddTransient<IPostService, PostService>();
 			serviceCollection.AddTransient<IImageService, ImageService>();
 			serviceCollection.AddTransient<ITimeAdjustService, TimeAdjustService>();
+			serviceCollection.AddTransient<IContentService, ContentService>();
 
 			return serviceCollection;
 		}

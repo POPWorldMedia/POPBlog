@@ -1,0 +1,41 @@
+﻿@model IEnumerable<PopBlog.Mvc.Models.Content>
+@{
+	ViewBag.Title = "Content";
+	Layout = "AdminLayout";
+}
+
+<h1>Content</h1>
+
+<table class="table">
+	<tr>
+		<th>ContentID</th>
+		<th>Title</th>
+		<th>Last Updated</th>
+		<th></th>
+	</tr>
+	@foreach (var content in Model.Select(c => new {c.ContentID, c.Title, c.LastUpdated})) {
+		<tr>
+			<td><a asp-controller="Admin" asp-action="EditContent" asp-route-id="@content.ContentID">@content.ContentID</a></td>
+			<td><a asp-action="Detail" asp-controller="Content" asp-route-id="@content.ContentID" target="_blank">@content.Title</a></td>
+			<td>@content.LastUpdated</td>
+			<td>
+				<form asp-controller="Admin" asp-action="DeleteContent" asp-route-id="@content.ContentID">
+					<input type="submit" value="Delete" class="btn btn-primary"/>
+				</form>
+			</td>
+		</tr>
+	}
+</table>
+
+<form asp-action="NewContent" asp-controller="Admin" method="POST">
+	<h2>Create new page</h2>
+	<div class="form-group">
+		<label for="ContentID">ContentID (will appear as /content/<i>yourID</i>)</label>
+		<input type="text" name="ContentID" id="ContentID" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label for="ContentID">Title</label>
+		<input type="text" name="Title" id="Title" class="form-control" />
+	</div>
+	<input type="submit" value="Create" class="btn btn-primary" />
+</form>
