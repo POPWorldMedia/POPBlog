@@ -8,7 +8,7 @@ GO
 
 CREATE TABLE [dbo].[Posts](
 	[PostID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
-	[UserID] [int] NOT NULL,
+	[UserID] [int] NULL,
 	[Title] [nvarchar](256) NOT NULL,
 	[FullText] [nvarchar](max) NOT NULL,
 	[TimeStamp] [datetime] NOT NULL,
@@ -20,9 +20,12 @@ CREATE TABLE [dbo].[Posts](
 )
 GO
 
-ALTER TABLE [dbo].[Posts]  WITH CHECK ADD  CONSTRAINT [FK_Posts_UserID] FOREIGN KEY([UserID])
-REFERENCES [dbo].[Users] ([UserID])
+CREATE UNIQUE NONCLUSTERED INDEX [IX_Post_UrlTitle] ON [dbo].[Posts](
+	[UrlTitle] ASC
+)
 GO
+
+
 
 CREATE TABLE [dbo].[Contents](
 	[ContentID] [varchar](256) NOT NULL PRIMARY KEY,
@@ -33,7 +36,7 @@ CREATE TABLE [dbo].[Contents](
 GO
 
 CREATE TABLE [dbo].[Comments](
-	[CommentID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY,
+	[CommentID] [int] IDENTITY(1,1) NOT NULL PRIMARY KEY NONCLUSTERED,
 	[PostID] [int] NOT NULL,
 	[UserID] [int] NULL,
 	[FullText] [nvarchar](max) NOT NULL,
@@ -43,6 +46,11 @@ CREATE TABLE [dbo].[Comments](
 	[Name] [nvarchar](256) NOT NULL,
 	[Email] [nvarchar](256) NULL,
 	[WebSite] [nvarchar](256) NULL
+)
+GO
+
+CREATE CLUSTERED INDEX [IX_Comment_PostID] ON [dbo].[Comments](
+	[PostID] ASC
 )
 GO
 
