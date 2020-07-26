@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -8,10 +9,12 @@ namespace PopBlog.Mvc.Repositories
 {
 	public interface ICommentRepository
 	{
-		Task<IEnumerable<Comment>> GetRecent();
-		Task Create(Comment comment);
+		Task<IEnumerable<CommentLink>> GetRecentCommentIDTitleUrlDictionary();
+		Task<int> Create(Comment comment);
 		Task Delete(int commentID);
 		Task<IEnumerable<Comment>> GetByPost(int postID);
+		Task<int> GetCommentCount(int postID);
+		Task<Comment> Get(int commentID);
 	}
 
 	public class CommentRepository : ICommentRepository
@@ -23,17 +26,18 @@ namespace PopBlog.Mvc.Repositories
 			_config = config;
 		}
 
-		public async Task<IEnumerable<Comment>> GetRecent()
+		public async Task<IEnumerable<CommentLink>> GetRecentCommentIDTitleUrlDictionary()
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
-			var comments = await connection.QueryAsync<Comment>("SELECT TOP 30 * FROM Comments ORDER BY TimeStamp DESC");
+			var comments = await connection.QueryAsync<CommentLink>("SELECT TOP 30 C.CommentID, P.UrlTitle, P.Title, P.TimeStamp FROM Comments C JOIN Posts P ON C.PostID = P.PostID ORDER BY C.TimeStamp DESC");
 			return comments;
 		}
 
-		public async Task Create(Comment comment)
+		public async Task<int> Create(Comment comment)
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
-			await connection.ExecuteAsync("INSERT INTO Comments (PostID, UserID, FullText, TimeStamp, IsLive, IP, Name, Email, WebSite) VALUES (@PostID, @UserID, @FullText, @TimeStamp, @IsLive, @IP, @Name, @Email, @WebSite)", comment);
+			var id = await connection.QuerySingleAsync<int>("INSERT INTO Comments (PostID, UserID, FullText, TimeStamp, IsLive, IP, Name, Email, WebSite) VALUES (@PostID, @UserID, @FullText, @TimeStamp, @IsLive, @IP, @Name, @Email, @WebSite);SELECT CAST(SCOPE_IDENTITY() as int)", comment);
+			return id;
 		}
 
 		public async Task Delete(int commentID)
@@ -47,6 +51,20 @@ namespace PopBlog.Mvc.Repositories
 			await using var connection = new SqlConnection(_config.ConnectionString);
 			var comments = await connection.QueryAsync<Comment>("SELECT * FROM Comments WHERE PostID = @PostID ORDER BY TimeStamp", new {PostID = postID});
 			return comments;
+		}
+
+		public async Task<int> GetCommentCount(int postID)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			var count = await connection.QuerySingleAsync<int>("SELECT COUNT(*) FROM Comments WHERE PostID = @PostID", new {PostID = postID});
+			return count;
+		}
+
+		public async Task<Comment> Get(int commentID)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			var comment = await connection.QuerySingleOrDefaultAsync<Comment>("SELECT * FROM Comments WHERE CommentID = @CommentID", new {CommentID = commentID});
+			return comment;
 		}
 	}
 }

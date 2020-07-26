@@ -26,12 +26,14 @@ namespace PopBlog.Mvc.Services
 		private readonly IPostRepository _postRepository;
 		private readonly IConfig _config;
 		private readonly ITimeAdjustService _timeAdjustService;
+		private readonly ICommentRepository _commentRepository;
 
-		public PostService(IPostRepository postRepository, IConfig config, ITimeAdjustService timeAdjustService)
+		public PostService(IPostRepository postRepository, IConfig config, ITimeAdjustService timeAdjustService, ICommentRepository commentRepository)
 		{
 			_postRepository = postRepository;
 			_config = config;
 			_timeAdjustService = timeAdjustService;
+			_commentRepository = commentRepository;
 		}
 
 		public async Task<IEnumerable<Post>> GetLast20LiveAndPublic()
@@ -120,6 +122,12 @@ namespace PopBlog.Mvc.Services
 			foreach (var item in list)
 				item.TimeStamp = _timeAdjustService.GetAdjustedTime(item.TimeStamp);
 			return list;
+		}
+
+		public async Task UpdateCommentCount(int postID)
+		{
+			var count = await _commentRepository.GetCommentCount(postID);
+			await _postRepository.UpdateReplies(postID, count);
 		}
 	}
 }

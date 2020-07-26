@@ -20,14 +20,16 @@ namespace PopBlog.Mvc.Controllers
 		private readonly IImageService _imageService;
 		private readonly ITimeAdjustService _timeAdjustService;
 		private readonly IContentService _contentService;
+		private readonly ICommentService _commentService;
 
-		public AdminController(IPostService postService, IUserService userService, IImageService imageService, ITimeAdjustService timeAdjustService, IContentService contentService)
+		public AdminController(IPostService postService, IUserService userService, IImageService imageService, ITimeAdjustService timeAdjustService, IContentService contentService, ICommentService commentService)
 		{
 			_postService = postService;
 			_userService = userService;
 			_imageService = imageService;
 			_timeAdjustService = timeAdjustService;
 			_contentService = contentService;
+			_commentService = commentService;
 		}
 
 		[HttpGet("/admin")]
@@ -192,6 +194,22 @@ namespace PopBlog.Mvc.Controllers
 		{
 			await _contentService.Update(id, content);
 			return RedirectToAction("Content");
+		}
+
+		[HttpPost("/admin/deletecomment/{id}")]
+		public async Task<IActionResult> DeleteComment(int id)
+		{
+			await _commentService.Delete(id);
+			return RedirectToAction("Comments");
+		}
+
+		[HttpGet("/admin/comments")]
+		public async Task<IActionResult> Comments()
+		{
+			var comments = await _commentService.GetRecent();
+			foreach (var item in comments)
+				item.TimeStamp = _timeAdjustService.GetAdjustedTime(item.TimeStamp);
+			return View(comments);
 		}
 	}
 }

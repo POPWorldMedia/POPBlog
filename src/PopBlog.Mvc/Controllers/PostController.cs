@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using PopBlog.Mvc.Models;
 using PopBlog.Mvc.Services;
 
 namespace PopBlog.Mvc.Controllers
@@ -11,11 +12,13 @@ namespace PopBlog.Mvc.Controllers
 	{
 		private readonly IPostService _postService;
 		private readonly IImageService _imageService;
+		private readonly ICommentService _commentService;
 
-		public PostController(IPostService postService, IImageService imageService)
+		public PostController(IPostService postService, IImageService imageService, ICommentService commentService)
 		{
 			_postService = postService;
 			_imageService = imageService;
+			_commentService = commentService;
 		}
 
 		[HttpGet("/blog/{urlTitle}")]
@@ -24,7 +27,9 @@ namespace PopBlog.Mvc.Controllers
 			var post = await _postService.Get(urlTitle);
 			if (post == null)
 				return StatusCode(404);
-			return View(post);
+			var comments = await _commentService.GetByPost(post.PostID);
+			var container = new PostDisplayContainer {Post = post, Comments = comments};
+			return View(container);
 		}
 
 		[HttpGet("/post/image/{id}")]
@@ -33,20 +38,30 @@ namespace PopBlog.Mvc.Controllers
 			var image = await _imageService.GetImage(id);
 			if (image == null)
 				return StatusCode(404);
-			if (!String.IsNullOrEmpty(Request.Headers["If-Modified-Since"]))
+			if (!string.IsNullOrEmpty(Request.Headers["If-Modified-Since"]))
 			{
-				CultureInfo provider = CultureInfo.InvariantCulture;
+				var provider = CultureInfo.InvariantCulture;
 				var lastMod = DateTime.ParseExact(Request.Headers["If-Modified-Since"], "r", provider);
 				if (lastMod == image.TimeStamp.AddMilliseconds(-image.TimeStamp.Millisecond))
 				{
 					Response.StatusCode = 304;
-					return Content(String.Empty);
+					return Content(string.Empty);
 				}
 			}
 			var stream = new MemoryStream(await _imageService.GetImageData(image.ImageID));
 			Response.Headers.Add("Cache-Control", "public");
 			Response.Headers.Add("Last-Modified", image.TimeStamp.ToString("r"));
 			return File(stream, image.MimeType);
+		}
+
+		[HttpPost("/post/addcomment")]
+		public async Task<ActionResult> AddComment(CommentPost comment)
+		{
+			var post = await _postService.Get(comment.PostID);
+			if (post == null)
+				return StatusCode(404);
+			var commentID = await _commentService.Create(comment.PostID, comment.FullText, comment.Name, comment.Email, comment.WebSite);
+			return new RedirectResult(Url.Action("Detail", new { urlTitle = post.UrlTitle }) + "#" + commentID);
 		}
 	}
 }

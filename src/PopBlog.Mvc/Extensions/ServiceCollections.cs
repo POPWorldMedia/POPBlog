@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using PopBlog.Mvc.Repositories;
 using PopBlog.Mvc.Services;
 
@@ -25,6 +26,8 @@ namespace PopBlog.Mvc.Extensions
 			serviceCollection.AddTransient<IContentService, ContentService>();
 			serviceCollection.AddTransient<ICommentService, CommentService>();
 			serviceCollection.AddTransient<ITextParsingService, TextParsingService>();
+
+			serviceCollection.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 
 			return serviceCollection;
 		}

@@ -20,6 +20,7 @@ namespace PopBlog.Mvc.Repositories
 		Task<Post> Get(string urlTitle);
 		Task<IEnumerable<MonthCount>> GetArchiveCounts();
 		Task<IEnumerable<Post>> GetByDateRange(DateTime start, DateTime end);
+		Task UpdateReplies(int postID, int count);
 	}
 
 	public class PostRepository : IPostRepository
@@ -96,6 +97,12 @@ namespace PopBlog.Mvc.Repositories
 			await using var connection = new SqlConnection(_config.ConnectionString);
 			var list = await connection.QueryAsync<Post>("SELECT * FROM Posts WHERE TimeStamp >= @Start AND TimeStamp < @End AND IsLive = 1 AND IsPrivate = 0 ORDER BY TimeStamp DESC", new {Start = start, End = end});
 			return list;
+		}
+
+		public async Task UpdateReplies(int postID, int count)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			await connection.ExecuteAsync("UPDATE Posts SET Replies = @Replies WHERE PostID = @PostID", new {PostID = postID, Replies = count});
 		}
 	}
 }

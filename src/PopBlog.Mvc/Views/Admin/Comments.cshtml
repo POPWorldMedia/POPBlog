@@ -1,0 +1,14 @@
+﻿@model IEnumerable<PopBlog.Mvc.Models.CommentLink>
+@{
+	ViewBag.Title = "Home";
+	Layout = "AdminLayout";
+}
+
+<h1>Recent comments</h1>
+
+<ul>
+	@foreach (var item in Model)
+	{
+		<li><a asp-action="Detail" asp-controller="Post" asp-route-urlTitle="@item.UrlTitle" asp-fragment="@item.CommentID">@item.Title</a> | @item.TimeStamp</li>
+	}
+</ul>

@@ -1,26 +1,76 @@
 ﻿@using System.Security.Claims
 @using PopBlog.Mvc
-@model PopBlog.Mvc.Models.Post
+@model PopBlog.Mvc.Models.PostDisplayContainer
 @inject IConfig Config
 @{
 }
 
 <div class="my-3">
-	<h1 class="blogPostTitle">@Model.Title</h1>
+	<h1 class="blogPostTitle">@Model.Post.Title</h1>
 	<h3 class="blogPostDetails">
-		posted by @Model.Name | @Model.TimeStamp.ToString("dddd, MMMM d, yyyy, h:mm tt") | <a href="#comments">comments</a>: @Model.Replies
+		posted by @Model.Post.Name | @Model.Post.TimeStamp.ToString("dddd, MMMM d, yyyy, h:mm tt") | <a href="#comments">comments</a>: @Model.Post.Replies
 		@if (User.HasClaim(ClaimTypes.Role, "Admin"))
 		{
-			<text>|</text> <a asp-controller="Admin" asp-action="EditPost" asp-route-postID="@Model.PostID">Edit</a>
+			<text>|</text> <a asp-controller="Admin" asp-action="EditPost" asp-route-postID="@Model.Post.PostID">Edit</a>
 		}
-		</h3>
+	</h3>
 	<div class="postBody">
-		@Html.Raw(Model.FullText)
+		@Html.Raw(Model.Post.FullText)
 	</div>
 	<hr />
 </div>
 
 <a name="comments"></a>
-<div>
-
+<div id="Comments">
+	<h2>Comments</h2>
+	@foreach (var comment in Model.Comments)
+	{
+		<div id="@("comment"+comment.CommentID)" class="comment">
+			<h3 class="commentDetails"><a href="@comment.WebSite" target="_blank">@comment.Name</a>, @comment.TimeStamp.ToString("MMMM d, yyyy, h:mm tt") <a name="@(comment.CommentID)" href="#@(comment.CommentID)">#</a> @if (User.Identity.IsAuthenticated)
+			{<text> | </text>@comment.IP<text> | </text><a href="mailto:@comment.Email">@comment.Email</a>}</h3>
+			<div class="commentText">@Html.Raw(comment.FullText)</div>
+			@if (User.Identity.IsAuthenticated)
+			{
+				<form asp-controller="Admin" asp-action="DeleteComment" asp-route-id="@comment.CommentID">
+					<p><input type="submit" value="Delete" class="btn btn-primary" /></p>
+					<input type="hidden" id="PostID" name="PostID" value="@comment.PostID" />
+				</form>
+			}
+		</div>
+	}
 </div>
+@if (Model.Post.IsClosed)
+{
+	<p>Comments are closed.</p>
+}
+else
+{
+	<div id="CommentForm">
+		<form id="ValidateCommentForm" asp-controller="Post" asp-action="AddComment">
+			<h3>Post your comment:</h3>
+			<input type="hidden" id="PostID" name="PostID" value="@Model.Post.PostID" />
+			@if (!User.Identity.IsAuthenticated)
+			{
+				<div class="form-group">
+					<label for="Name">Name</label>
+					<input id="Name" name="Name" class="form-control" />
+				</div>
+				<div class="form-group">
+					<label for="Email">Email (will not be displayed)</label>
+					<input id="Email" name="Email" class="form-control" type="email" />
+				</div>
+				<div class="form-group">
+					<label for="WebSite">Web site (optional)</label>
+					<input id="WebSite" name="WebSite" class="form-control" type="url" />
+				</div>
+				<div class="g-recaptcha" data-sitekey="6Le69BMTAAAAALObS4aZfl0jRdcDiKqDIqrGti2n"></div>
+			}
+			<div class="form-group">
+				<label for="FullText"></label>
+				<textarea id="FullText" name="FullText" rows="10" class="form-control"></textarea>
+			</div>
+			<button id="SendCommentButton" type="submit" class="btn btn-primary">Send comment</button>
+			<span id="ResponseLabel" class="warning"></span>
+		</form>
+	</div>
+}
