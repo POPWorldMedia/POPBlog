@@ -7,5 +7,6 @@
 		public string Email { get; set; }
 		public string WebSite { get; set; }
 		public string FullText { get; set; }
+		public string Token { get; set; }
 	}
 }

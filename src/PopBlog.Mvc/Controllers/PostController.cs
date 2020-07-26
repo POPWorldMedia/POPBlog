@@ -13,12 +13,14 @@ namespace PopBlog.Mvc.Controllers
 		private readonly IPostService _postService;
 		private readonly IImageService _imageService;
 		private readonly ICommentService _commentService;
+		private readonly IReCaptchaService _reCaptchaService;
 
-		public PostController(IPostService postService, IImageService imageService, ICommentService commentService)
+		public PostController(IPostService postService, IImageService imageService, ICommentService commentService, IReCaptchaService reCaptchaService)
 		{
 			_postService = postService;
 			_imageService = imageService;
 			_commentService = commentService;
+			_reCaptchaService = reCaptchaService;
 		}
 
 		[HttpGet("/blog/{urlTitle}")]
@@ -60,6 +62,12 @@ namespace PopBlog.Mvc.Controllers
 			var post = await _postService.Get(comment.PostID);
 			if (post == null)
 				return StatusCode(404);
+			var ip = HttpContext.Connection.RemoteIpAddress.ToString();
+			var recap = await _reCaptchaService.VerifyToken(comment.Token, ip);
+			if (!recap.IsSuccess)
+			{
+				return StatusCode(403);
+			}
 			var commentID = await _commentService.Create(comment.PostID, comment.FullText, comment.Name, comment.Email, comment.WebSite);
 			return new RedirectResult(Url.Action("Detail", new { urlTitle = post.UrlTitle }) + "#" + commentID);
 		}
