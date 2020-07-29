@@ -21,8 +21,9 @@ namespace PopBlog.Mvc.Controllers
 		private readonly ITimeAdjustService _timeAdjustService;
 		private readonly IContentService _contentService;
 		private readonly ICommentService _commentService;
+		private readonly IIpBanService _ipBanService;
 
-		public AdminController(IPostService postService, IUserService userService, IImageService imageService, ITimeAdjustService timeAdjustService, IContentService contentService, ICommentService commentService)
+		public AdminController(IPostService postService, IUserService userService, IImageService imageService, ITimeAdjustService timeAdjustService, IContentService contentService, ICommentService commentService, IIpBanService ipBanService)
 		{
 			_postService = postService;
 			_userService = userService;
@@ -30,6 +31,7 @@ namespace PopBlog.Mvc.Controllers
 			_timeAdjustService = timeAdjustService;
 			_contentService = contentService;
 			_commentService = commentService;
+			_ipBanService = ipBanService;
 		}
 
 		[HttpGet("/admin")]
@@ -210,6 +212,29 @@ namespace PopBlog.Mvc.Controllers
 			foreach (var item in comments)
 				item.TimeStamp = _timeAdjustService.GetAdjustedTime(item.TimeStamp);
 			return View(comments);
+		}
+
+		[HttpGet("/admin/ipban")]
+		public async Task<ActionResult> IPBan()
+		{
+			var list = await _ipBanService.GetAll();
+			return View(list);
+		}
+
+		[HttpPost("/admin/addipban")]
+		public async Task<ActionResult> AddIPBan(string newIP)
+		{
+			if (!string.IsNullOrEmpty(newIP))
+				await _ipBanService.Add(newIP);
+			return RedirectToAction("IPBan");
+		}
+
+		[HttpPost("/admin/deleteipban")]
+		public async Task<ActionResult> DeleteIPBan(string banList)
+		{
+			if (!string.IsNullOrEmpty(banList))
+				await _ipBanService.Delete(banList);
+			return RedirectToAction("IPBan");
 		}
 	}
 }
