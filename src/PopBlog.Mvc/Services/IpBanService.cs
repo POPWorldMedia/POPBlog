@@ -23,7 +23,7 @@ namespace PopBlog.Mvc.Services
 
 		public async Task Add(string ip)
 		{
-			await _ipBanRepository.Add(ip);
+			await _ipBanRepository.Add(ip.Trim());
 		}
 
 		public async Task Delete(string ip)
