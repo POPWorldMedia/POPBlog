@@ -45,7 +45,7 @@ namespace PopBlog.Mvc.Services
 
 		public async Task Update(string id, Content content)
 		{
-			content.LastUpdated = _timeAdjustService.GetReverseAdjustedTime(content.LastUpdated);
+			content.LastUpdated = DateTime.UtcNow;
 			await _contentRepository.Update(id, content);
 		}
 	}

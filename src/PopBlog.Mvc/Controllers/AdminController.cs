@@ -187,7 +187,6 @@ namespace PopBlog.Mvc.Controllers
 			var content = await _contentService.Get(id);
 			if (content == null)
 				return StatusCode(404);
-			content.LastUpdated = _timeAdjustService.GetAdjustedTime(content.LastUpdated);
 			return View(content);
 		}
 
