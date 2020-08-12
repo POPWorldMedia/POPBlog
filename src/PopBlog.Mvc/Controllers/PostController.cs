@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using PopBlog.Mvc.Models;
@@ -65,12 +66,15 @@ namespace PopBlog.Mvc.Controllers
 			if (post == null)
 				return StatusCode(404);
 			var ip = HttpContext.Connection.RemoteIpAddress.ToString();
-			var recap = await _reCaptchaService.VerifyToken(comment.Token, ip);
-			if (!recap.IsSuccess)
-				return StatusCode(403);
-			var isIpBanned = await _ipBanService.IsIpBanned(ip);
-			if (isIpBanned)
-				return StatusCode(403);
+			if (!User.HasClaim(ClaimTypes.Role, "Admin"))
+			{
+				var recap = await _reCaptchaService.VerifyToken(comment.Token, ip);
+				if (!recap.IsSuccess)
+					return StatusCode(403);
+				var isIpBanned = await _ipBanService.IsIpBanned(ip);
+				if (isIpBanned)
+					return StatusCode(403);
+			}
 			var commentID = await _commentService.Create(comment.PostID, comment.FullText, comment.Name, comment.Email, comment.WebSite);
 			return new RedirectResult(Url.Action("Detail", new { urlTitle = post.UrlTitle }) + "#" + commentID);
 		}
