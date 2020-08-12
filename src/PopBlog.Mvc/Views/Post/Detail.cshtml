@@ -4,6 +4,7 @@
 @inject IConfig Config
 @{
 	var recaptchaKey = Config.ReCaptchaSiteKey;
+	ViewBag.Title = Model.Post.Title;
 }
 
 <div class="my-3">

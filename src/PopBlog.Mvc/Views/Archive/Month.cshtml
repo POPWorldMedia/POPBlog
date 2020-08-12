@@ -3,9 +3,11 @@
 @model IEnumerable<PopBlog.Mvc.Models.Post>
 @inject IConfig Config
 @{
+	var title = $"{CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(ViewBag.Month)}, {ViewBag.Year}";
+	ViewBag.Title = title;
 }
 
-<h1>Archive: @CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(ViewBag.Month), @ViewBag.Year</h1>
+<h1>Archive: @title</h1>
 
 @foreach (var item in Model)
 {

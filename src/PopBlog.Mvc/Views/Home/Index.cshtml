@@ -2,7 +2,10 @@
 @model IEnumerable<PopBlog.Mvc.Models.Post>
 @inject IConfig Config
 @{
+	ViewBag.Title = Config.BlogDescription;
 }
+
+<h1>@Config.BlogDescription</h1>
 
 @foreach (var item in Model)
 {
