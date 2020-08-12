@@ -26,10 +26,10 @@ function initEditor(id) {
 		elements: id,
 		theme: "silver",
 		relative_urls: false,
-		plugins: "lists",
+		plugins: ["lists","code"],
 
 		menubar: "edit insert view format table tools",
-		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent bullist numlist | imgmgr imgfoldermgr",
+		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent bullist numlist | imgmgr imgfoldermgr | code",
 
 		extended_valid_elements: "iframe[src|width|height|name|align]",
 
