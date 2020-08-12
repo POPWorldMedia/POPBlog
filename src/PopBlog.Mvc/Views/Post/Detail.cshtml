@@ -8,8 +8,8 @@
 }
 
 <div class="my-3">
-	<h1 class="blogPostTitle">@Model.Post.Title</h1>
-	<h3 class="blogPostDetails">
+	<h1 class="blogPostTitle mb-3">@Model.Post.Title</h1>
+	<h3 class="blogPostDetails my-3">
 		posted by @Model.Post.Name | @Model.Post.TimeStamp.ToString("dddd, MMMM d, yyyy, h:mm tt") | <a href="#comments">comments</a>: @Model.Post.Replies
 		@if (User.HasClaim(ClaimTypes.Role, "Admin"))
 		{
@@ -19,15 +19,15 @@
 	<div class="postBody">
 		@Html.Raw(Model.Post.FullText)
 	</div>
-	<hr />
+	<hr class="mb-5" />
 </div>
 
 <a name="comments"></a>
 <div id="Comments">
-	<h2>Comments</h2>
+	<h2 class="my-5">Comments</h2>
 	@foreach (var comment in Model.Comments)
 	{
-		<div id="@("comment"+comment.CommentID)" class="comment">
+		<div id="@("comment"+comment.CommentID)" class="comment mb-5">
 			<h3 class="commentDetails"><a href="@comment.WebSite" target="_blank">@comment.Name</a>, @comment.TimeStamp.ToString("MMMM d, yyyy, h:mm tt") <a name="@(comment.CommentID)" href="#@(comment.CommentID)">#</a> @if (User.Identity.IsAuthenticated)
 			{<text> | </text>@comment.IP<text> | </text><a href="mailto:@comment.Email">@comment.Email</a>}</h3>
 			<div class="commentText">@Html.Raw(comment.FullText)</div>
@@ -47,7 +47,7 @@
 }
 else
 {
-	<hr/>
+	<hr class="mb-5"/>
 	<div id="CommentForm">
 		<form id="ValidateCommentForm" asp-controller="Post" asp-action="AddComment">
 			<h3>Post your comment:</h3>
