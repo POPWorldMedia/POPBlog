@@ -31,7 +31,7 @@ function initEditor(id) {
 		menubar: "edit insert view format table tools",
 		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent bullist numlist | imgmgr imgfoldermgr | code",
 
-		extended_valid_elements: "iframe[src|width|height|name|align]",
+		extended_valid_elements: "iframe[src|width|height|name|align],script[src|async|defer|type|charset]",
 
 		content_css: "/lib/bootstrap/dist/css/bootstrap.css",
 		gecko_spellcheck: true,
