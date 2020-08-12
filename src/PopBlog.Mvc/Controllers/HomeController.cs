@@ -105,7 +105,7 @@ namespace PopBlog.Mvc.Controllers
 			var title = _config.BlogTitle;
 			var rootLink = "https://" + Request.Host + "/";
 			var description = _config.BlogDescription;
-			var posts = await _postService.GetLast20();
+			var posts = await _postService.GetLast20LiveAndPublic();
 			XNamespace atom = "http://www.w3.org/2005/Atom";
 			XDocument xml;
 			xml = new XDocument(
