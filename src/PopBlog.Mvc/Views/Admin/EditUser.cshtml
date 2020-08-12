@@ -1,0 +1,24 @@
+﻿@model PopBlog.Mvc.Models.User
+@{
+	ViewBag.Title = "Edit User";
+	Layout = "AdminLayout";
+}
+
+<h1>Edit User</h1>
+
+<form asp-action="EditUser" asp-controller="Admin" method="POST" asp-route-id="@Model.UserID">
+	<h2>Create new user</h2>
+	<div class="form-group">
+		<label for="Name">Name</label>
+		<input type="text" asp-for="Name" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label for="Email">Email</label>
+		<input type="text" asp-for="Email" class="form-control" autocomplete="new-email" />
+	</div>
+	<div class="form-group">
+		<label for="Password">Password (optional to change)</label>
+		<input type="password" name="Password" id="Password" class="form-control" autocomplete="new-password" />
+	</div>
+	<input type="submit" value="Update" class="btn btn-primary" />
+</form>

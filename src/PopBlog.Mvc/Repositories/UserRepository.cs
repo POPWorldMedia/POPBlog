@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -11,8 +12,13 @@ namespace PopBlog.Mvc.Repositories
 		Task<bool> IsFirstUserCreated();
 		Task Create(User user);
 		Task<bool> IsValidUser(string email, string passwordHash);
+		Task<User> Get(int userID);
 		Task<User> GetUserByEmail(string email);
 		Task<User> GetUserByName(string name);
+		Task<IEnumerable<User>> GetAll();
+		Task Delete(int userID);
+		Task Update(int userID, string name, string email);
+		Task UpdatePassword(int userID, string password);
 	}
 
 	public class UserRepository : IUserRepository
@@ -44,6 +50,13 @@ namespace PopBlog.Mvc.Repositories
 			return userIsValid;
 		}
 
+		public async Task<User> Get(int userID)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			var user = await connection.QuerySingleOrDefaultAsync<User>("SELECT * FROM Users WHERE UserID = @UserID", new { UserID = userID });
+			return user;
+		}
+
 		public async Task<User> GetUserByEmail(string email)
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
@@ -56,6 +69,31 @@ namespace PopBlog.Mvc.Repositories
 			await using var connection = new SqlConnection(_config.ConnectionString);
 			var user = await connection.QuerySingleOrDefaultAsync<User>("SELECT UserID, Name, Email FROM Users WHERE Name = @Name", new { Name = name });
 			return user;
+		}
+
+		public async Task<IEnumerable<User>> GetAll()
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			var users = await connection.QueryAsync<User>("SELECT * FROM Users ORDER BY Name");
+			return users;
+		}
+
+		public async Task Delete(int userID)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			await connection.ExecuteAsync("DELETE FROM Users WHERE UserID = @UserID", new {UserID = userID});
+		}
+
+		public async Task Update(int userID, string name, string email)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			await connection.ExecuteAsync("UPDATE Users SET Name = @Name, Email = @Email WHERE UserID = @UserID", new { UserID = userID, Name = name, Email = email });
+		}
+
+		public async Task UpdatePassword(int userID, string password)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			await connection.ExecuteAsync("UPDATE Users SET Password = @Password WHERE UserID = @UserID", new { UserID = userID, Password = password });
 		}
 	}
 }

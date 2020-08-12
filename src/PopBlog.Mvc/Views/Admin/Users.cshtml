@@ -1,0 +1,43 @@
+﻿@model IEnumerable<PopBlog.Mvc.Models.User>
+@{
+	ViewBag.Title = "Users";
+	Layout = "AdminLayout";
+}
+
+<h1>Users</h1>
+
+<table class="table">
+	<tr>
+		<th>Name</th>
+		<th>Email</th>
+		<th></th>
+	</tr>
+	@foreach (var user in Model) {
+		<tr>
+			<td><a asp-action="EditUser" asp-route-id="@user.UserID">@user.Name</a></td>
+			<td><a href="mailto:@user.Email">@user.Email</a></td>
+			<td>
+				<form asp-controller="Admin" asp-action="DeleteUser" asp-route-id="@user.UserID">
+					<input type="submit" value="Delete" class="btn btn-primary"/>
+				</form>
+			</td>
+		</tr>
+	}
+</table>
+
+<form asp-action="NewUser" asp-controller="Admin" method="POST">
+	<h2>Create new user</h2>
+	<div class="form-group">
+		<label for="Name">Name</label>
+		<input type="text" name="Name" id="Name" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label for="Email">Email</label>
+		<input type="text" name="Email" id="Email" class="form-control" autocomplete="new-email" />
+	</div>
+	<div class="form-group">
+		<label for="Password">Password</label>
+		<input type="password" name="Password" id="Password" class="form-control" autocomplete="new-password" />
+	</div>
+	<input type="submit" value="Create" class="btn btn-primary" />
+</form>

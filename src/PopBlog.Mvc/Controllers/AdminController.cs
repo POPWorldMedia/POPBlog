@@ -235,5 +235,40 @@ namespace PopBlog.Mvc.Controllers
 				await _ipBanService.Delete(banList);
 			return RedirectToAction("IPBan");
 		}
+
+		[HttpGet("/admin/users")]
+		public async Task<ActionResult> Users()
+		{
+			var users = await _userService.GetAll();
+			return View(users);
+		}
+
+		[HttpPost("/admin/deleteuser")]
+		public async Task<ActionResult> DeleteUser(int id)
+		{
+			await _userService.Delete(id);
+			return RedirectToAction("Users");
+		}
+
+		[HttpPost("/admin/newuser")]
+		public async Task<ActionResult> NewUser(User user)
+		{
+			await _userService.Create(user);
+			return RedirectToAction("Users");
+		}
+
+		[HttpGet("/admin/edituser/{id}")]
+		public async Task<ActionResult> EditUser(int id)
+		{
+			var user = await _userService.Get(id);
+			return View(user);
+		}
+
+		[HttpPost("/admin/edituser/{id}")]
+		public async Task<ActionResult> EditUser(int id, User user)
+		{
+			await _userService.Update(id, user.Name, user.Email, user.Password);
+			return RedirectToAction("Users");
+		}
 	}
 }
