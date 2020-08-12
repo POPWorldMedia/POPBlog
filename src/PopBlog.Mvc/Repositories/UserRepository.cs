@@ -27,8 +27,8 @@ namespace PopBlog.Mvc.Repositories
 		public async Task<bool> IsFirstUserCreated()
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
-			var hasOneOrMoreUsers = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Users") > 0;
-			return hasOneOrMoreUsers;
+			var hasOneOrMoreUsers = await connection.ExecuteScalarAsync<int>("SELECT COUNT(*) FROM Users");
+			return hasOneOrMoreUsers != 0;
 		}
 
 		public async Task Create(User user)
