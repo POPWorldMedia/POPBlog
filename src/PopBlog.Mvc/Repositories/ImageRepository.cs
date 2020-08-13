@@ -34,9 +34,9 @@ namespace PopBlog.Mvc.Repositories
 		{
 			string sql;
 			if (imageFolderID.HasValue)
-				sql = "SELECT ImageID, MimeType, FileName, ImageFolderID, TimeStamp FROM Images WHERE ImageFolderID = @ImageFolderID";
+				sql = "SELECT ImageID, MimeType, FileName, ImageFolderID, TimeStamp FROM Images WHERE ImageFolderID = @ImageFolderID ORDER BY FileName";
 			else
-				sql = "SELECT ImageID, MimeType, FileName, ImageFolderID, TimeStamp FROM Images WHERE ImageFolderID IS NULL";
+				sql = "SELECT ImageID, MimeType, FileName, ImageFolderID, TimeStamp FROM Images WHERE ImageFolderID IS NULL ORDER BY FileName";
 			await using var connection = new SqlConnection(_config.ConnectionString);
 			var images = await connection.QueryAsync<Image>(sql, new {ImageFolderID = imageFolderID});
 			return images;
