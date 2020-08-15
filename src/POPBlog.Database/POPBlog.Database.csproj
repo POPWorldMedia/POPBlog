@@ -8,9 +8,11 @@
   <ItemGroup>
     <None Remove="Scripts\Script0001 - seed.sql" />
     <None Remove="Scripts\Script0002 - add name to posts.sql" />
+    <None Remove="Scripts\Script0003 - add podcast fields to posts.sql" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Scripts\Script0003 - add podcast fields to posts.sql" />
     <EmbeddedResource Include="Scripts\Script0002 - add name to posts.sql" />
     <EmbeddedResource Include="Scripts\Script0001 - seed.sql" />
   </ItemGroup>

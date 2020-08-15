@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace PopBlog.Mvc
 {
@@ -12,6 +11,9 @@ namespace PopBlog.Mvc
 		string BlogTitle { get; }
 		string BlogDescription { get; }
 		double TimeZone { get; }
+		string StorageConnectionString { get; }
+		string StorageContainerName { get; }
+		string StorageAccountBaseUrl { get; }
 	}
 
 	public class Config : IConfig
@@ -29,5 +31,8 @@ namespace PopBlog.Mvc
 		public string BlogTitle => _configuration["BlogTitle"];
 		public string BlogDescription => _configuration["BlogDescription"];
 		public double TimeZone => Convert.ToDouble(_configuration["TimeZone"]);
+		public string StorageConnectionString => _configuration["StorageConnectionString"];
+		public string StorageContainerName => _configuration["StorageContainerName"];
+		public string StorageAccountBaseUrl => _configuration["StorageAccountBaseUrl"];
 	}
 }

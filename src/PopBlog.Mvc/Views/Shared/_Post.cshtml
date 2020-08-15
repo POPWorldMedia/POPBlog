@@ -1,0 +1,37 @@
+﻿@using System.Security.Claims
+@model PopBlog.Mvc.Models.Post
+@{
+	Layout = null;
+	var isDetail = false;
+	if (ViewBag.IsDetail != null)
+	{
+		isDetail = (bool) ViewBag.IsDetail;
+	}
+}
+
+<div class="my-3">
+	@if (isDetail)
+	{
+		<h1 class="blogPostTitle mb-3">@Model.Title</h1>
+	}
+	else
+	{
+		<h2 class="blogPostTitle mb-3"><a asp-controller="Post" asp-action="Detail" asp-route-urlTitle="@Model.UrlTitle">@Model.Title</a></h2>
+	}
+	@if (Model.IsPodcastPost)
+	{
+		<p><a asp-action="Download" asp-controller="Post" asp-route-id="@Model.PostID">Download...</a> <text>| Length: </text> @Model.Length <text>| Size: </text> @Model.Size <text>| Downloads: </text> @Model.DownloadCount</p>
+	}
+	<small class="blogPostDetails my-3">
+		posted by @Model.Name | @Model.TimeStamp.ToString("dddd, MMMM d, yyyy, h:mm tt") | <a href="#comments">comments</a>: @Model.Replies
+		@if (User.HasClaim(ClaimTypes.Role, "Admin"))
+		{
+			<text>|</text>
+			<a asp-controller="Admin" asp-action="EditPost" asp-route-postID="@Model.PostID">Edit</a>
+		}
+	</small>
+	<div class="postBody my-3">
+		@Html.Raw(Model.FullText)
+	</div>
+	<hr class="mb-5" />
+</div>

@@ -15,5 +15,10 @@ namespace PopBlog.Mvc.Models
 		public bool IsLive { get; set; }
 		public string UrlTitle { get; set; }
 		public string Name { get; set; }
+		public bool IsPodcastPost { get; set; }
+		public string FileName { get; set; }
+		public int DownloadCount { get; set; }
+		public string Length { get; set; }
+		public string Size { get; set; }
 	}
 }

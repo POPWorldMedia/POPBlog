@@ -21,6 +21,8 @@ namespace PopBlog.Mvc.Repositories
 		Task<IEnumerable<MonthCount>> GetArchiveCounts();
 		Task<IEnumerable<Post>> GetByDateRange(DateTime start, DateTime end);
 		Task UpdateReplies(int postID, int count);
+		Task IncrementDownloadCount(int postID);
+		Task Delete(int postID);
 	}
 
 	public class PostRepository : IPostRepository
@@ -37,13 +39,13 @@ namespace PopBlog.Mvc.Repositories
 		public async Task Create(Post post)
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
-			await connection.ExecuteAsync("INSERT INTO Posts (UserID, Title, FullText, TimeStamp, Replies, IsPrivate, IsClosed, IsLive, UrlTitle, Name) VALUES (@UserID, @Title, @FullText, @TimeStamp, @Replies, @IsPrivate, @IsClosed, @IsLive, @UrlTitle, @Name)", post);
+			await connection.ExecuteAsync("INSERT INTO Posts (UserID, Title, FullText, TimeStamp, Replies, IsPrivate, IsClosed, IsLive, UrlTitle, Name, IsPodcastPost, FileName, DownloadCount, Length, Size) VALUES (@UserID, @Title, @FullText, @TimeStamp, @Replies, @IsPrivate, @IsClosed, @IsLive, @UrlTitle, @Name, @IsPodcastPost, @FileName, @DownloadCount, @Length, @Size)", post);
 		}
 
 		public async Task Update(Post post)
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
-			await connection.ExecuteAsync("UPDATE Posts SET Title = @Title, FullText = @FullText, TimeStamp = @TimeStamp, IsPrivate = @IsPrivate, IsClosed = @IsClosed, IsLive = @IsLive, UrlTitle = @UrlTitle, Name = @Name WHERE PostID = @PostID", post);
+			await connection.ExecuteAsync("UPDATE Posts SET Title = @Title, FullText = @FullText, TimeStamp = @TimeStamp, IsPrivate = @IsPrivate, IsClosed = @IsClosed, IsLive = @IsLive, UrlTitle = @UrlTitle, Name = @Name, IsPodcastPost = @IsPodcastPost, FileName = @FileName, DownloadCount = @DownloadCount, Length = @Length, Size = @Size WHERE PostID = @PostID", post);
 		}
 
 		public async Task<IEnumerable<Post>> GetPostsThatUrlStartWith(string urlTitle)
@@ -103,6 +105,18 @@ namespace PopBlog.Mvc.Repositories
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
 			await connection.ExecuteAsync("UPDATE Posts SET Replies = @Replies WHERE PostID = @PostID", new {PostID = postID, Replies = count});
+		}
+
+		public async Task IncrementDownloadCount(int postID)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			await connection.ExecuteAsync("UPDATE Posts SET DownloadCount = DownloadCount + 1 WHERE PostID = @PostID", new { PostID = postID });
+		}
+
+		public async Task Delete(int postID)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			await connection.ExecuteAsync("DELETE FROM Posts WHERE PostID = @PostID", new { PostID = postID });
 		}
 	}
 }

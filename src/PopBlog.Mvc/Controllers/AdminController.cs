@@ -49,12 +49,13 @@ namespace PopBlog.Mvc.Controllers
 			return View(post);
 		}
 
+		[DisableRequestSizeLimit]
 		[HttpPost("/admin/newpost")]
-		public async Task<IActionResult> NewPost(Post post)
+		public async Task<IActionResult> NewPost(Post post, IFormFile podcastFile)
 		{
 			var user = await _userService.GetUserByName(User.Identity.Name);
 			post.UserID = user.UserID;
-			await _postService.Create(post);
+			await _postService.Create(post, podcastFile?.FileName, podcastFile?.OpenReadStream());
 			return RedirectToAction("Index", "Admin");
 		}
 
@@ -67,12 +68,20 @@ namespace PopBlog.Mvc.Controllers
 			return View(post);
 		}
 
+		[DisableRequestSizeLimit]
 		[HttpPost("/admin/editpost/{postID}")]
-		public async Task<IActionResult> EditPost(int postID, Post post)
+		public async Task<IActionResult> EditPost(int postID, Post post, IFormFile podcastFile)
 		{
 			post.PostID = postID;
-			await _postService.Update(post);
+			await _postService.Update(post, podcastFile?.FileName, podcastFile?.OpenReadStream());
 			return RedirectToAction("Index", "Admin");
+		}
+
+		[HttpPost("/admin/deletepost")]
+		public async Task<IActionResult> DeletePost(int postID)
+		{
+			await _postService.Delete(postID);
+			return RedirectToAction("Index");
 		}
 
 		[HttpGet("/Admin/ImageManager")]

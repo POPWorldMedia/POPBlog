@@ -11,14 +11,5 @@
 
 @foreach (var item in Model)
 {
-	<div class="my-3">
-		<h2 class="blogPostTitle mb-3"><a asp-controller="Post" asp-action="Detail" asp-route-urlTitle="@item.UrlTitle">@item.Title</a></h2>
-		<h3 class="blogPostDetails my-3">
-			posted by @item.Name | @item.TimeStamp.ToString("dddd, MMMM d, yyyy, h:mm tt") | <a asp-controller="Post" asp-action="Detail" asp-route-urlTitle="@item.UrlTitle" asp-fragment="comments">comments</a>: @item.Replies
-		</h3>
-		<div class="postBody">
-			@Html.Raw(item.FullText)
-		</div>
-		<hr class="mb-5" />
-	</div>
+	@Html.Partial("_Post", item)
 }

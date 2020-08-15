@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -11,14 +12,17 @@ namespace PopBlog.Mvc.Services
 	public interface IPostService
 	{
 		Task<IEnumerable<Post>> GetLast20LiveAndPublic();
-		Task Create(Post post);
-		Task Update(Post post);
+		Task Create(Post post, string fileName, Stream stream);
+		Task Update(Post post, string fileName, Stream stream);
 		string MakeUrlString(string text);
 		Task<IEnumerable<Post>> GetLast20();
 		Task<Post> Get(int postID);
 		Task<Post> Get(string urlTitle);
 		Task<IEnumerable<MonthCount>> GetArchiveCounts();
 		Task<IEnumerable<Post>> GetPostsByMonth(int year, int month);
+		Task<string> GetDownloadLink(int postID);
+		Task IncrementDownloadCount(int postID);
+		Task Delete(int postID);
 	}
 
 	public class PostService : IPostService
@@ -27,13 +31,15 @@ namespace PopBlog.Mvc.Services
 		private readonly IConfig _config;
 		private readonly ITimeAdjustService _timeAdjustService;
 		private readonly ICommentRepository _commentRepository;
+		private readonly IStorageRepository _storageRepository;
 
-		public PostService(IPostRepository postRepository, IConfig config, ITimeAdjustService timeAdjustService, ICommentRepository commentRepository)
+		public PostService(IPostRepository postRepository, IConfig config, ITimeAdjustService timeAdjustService, ICommentRepository commentRepository, IStorageRepository storageRepository)
 		{
 			_postRepository = postRepository;
 			_config = config;
 			_timeAdjustService = timeAdjustService;
 			_commentRepository = commentRepository;
+			_storageRepository = storageRepository;
 		}
 
 		public async Task<IEnumerable<Post>> GetLast20LiveAndPublic()
@@ -45,14 +51,49 @@ namespace PopBlog.Mvc.Services
 			return list;
 		}
 
-		public async Task Create(Post post)
+		public async Task Create(Post post, string fileName, Stream stream)
 		{
 			post.TimeStamp = _timeAdjustService.GetReverseAdjustedTime(post.TimeStamp);
+			if (stream != null && fileName != null)
+				await ProcessUpload(post, fileName, stream);
 			await SetUrlTitle(post);
 			await _postRepository.Create(post);
 		}
 
-		public async Task Update(Post post)
+		private async Task ProcessUpload(Post post, string fileName, Stream stream)
+		{
+			post.FileName = fileName;
+			post.IsPodcastPost = true;
+			var newStream = new MemoryStream();
+			await stream.CopyToAsync(newStream); // TagLib disposes of the stream so we can't save it
+			var container = new FileAbstraction(fileName, newStream);
+			var file = TagLib.File.Create(container);
+			post.Length = file.Properties.Duration.ToString(@"h\:mm\:ss");
+			post.Size = $"{stream.Length/1024/1024}MB";
+			await _storageRepository.Upload(fileName, stream);
+		}
+
+		private class FileAbstraction : TagLib.File.IFileAbstraction
+		{
+			private readonly Stream _stream;
+
+			public FileAbstraction(string name, Stream stream)
+			{
+				Name = name;
+				_stream = stream;
+			}
+
+			public void CloseStream(Stream stream)
+			{
+				_stream.Close();
+			}
+
+			public string Name { get; }
+			public Stream ReadStream => _stream;
+			public Stream WriteStream => _stream;
+		}
+
+		public async Task Update(Post post, string fileName, Stream stream)
 		{
 			post.TimeStamp = _timeAdjustService.GetReverseAdjustedTime(post.TimeStamp);
 			if (post.PostID == 0)
@@ -62,6 +103,15 @@ namespace PopBlog.Mvc.Services
 				await SetUrlTitle(post);
 			else
 				post.UrlTitle = originalPost.UrlTitle;
+			if (stream != null && fileName != null)
+				await ProcessUpload(post, fileName, stream);
+			else
+			{
+				post.FileName = originalPost.FileName;
+				post.IsPodcastPost = originalPost.IsPodcastPost;
+				post.Length = originalPost.Length;
+				post.Size = originalPost.Size;
+			}
 			await _postRepository.Update(post);
 		}
 
@@ -124,10 +174,23 @@ namespace PopBlog.Mvc.Services
 			return list;
 		}
 
-		public async Task UpdateCommentCount(int postID)
+		public async Task<string> GetDownloadLink(int postID)
 		{
-			var count = await _commentRepository.GetCommentCount(postID);
-			await _postRepository.UpdateReplies(postID, count);
+			var post = await _postRepository.Get(postID);
+			if (post == null)
+				return null;
+			var link = $"{_config.StorageAccountBaseUrl}/{_config.StorageContainerName}/{post.FileName}";
+			return link;
+		}
+
+		public async Task IncrementDownloadCount(int postID)
+		{
+			await _postRepository.IncrementDownloadCount(postID);
+		}
+
+		public async Task Delete(int postID)
+		{
+			await _postRepository.Delete(postID);
 		}
 	}
 }

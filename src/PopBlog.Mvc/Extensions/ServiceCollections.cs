@@ -18,6 +18,7 @@ namespace PopBlog.Mvc.Extensions
 			serviceCollection.AddTransient<IContentRepository, ContentRepository>();
 			serviceCollection.AddTransient<ICommentRepository, CommentRepository>();
 			serviceCollection.AddTransient<IIpBanRepository, IpBanRepository>();
+			serviceCollection.AddTransient<IStorageRepository, StorageRepository>();
 
 			serviceCollection.AddTransient<IUserService, UserService>();
 			serviceCollection.AddTransient<IReCaptchaService, ReCaptchaService>();

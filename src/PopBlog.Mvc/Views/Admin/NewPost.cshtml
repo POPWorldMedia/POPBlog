@@ -13,7 +13,7 @@
 
 <h1>New Post</h1>
 
-<form asp-action="NewPost" method="POST">
+<form asp-action="NewPost" method="POST" enctype="multipart/form-data">
 	<div class="form-group">
 		<label for="Title">Title</label>
 		<input asp-for="Title" class="form-control" />
@@ -39,6 +39,10 @@
 		<label>
 			<input asp-for="IsLive" type="checkbox" /> Is live?
 		</label>
+	</div>
+	<div class="form-group">
+		<label for="PodcastFile">Podcast file (optional)</label>
+		<input type="file" class="form-control-file" id="PodcastFile" name="PodcastFile">
 	</div>
 
 	<input type="submit" value="Save" class="btn btn-primary" />

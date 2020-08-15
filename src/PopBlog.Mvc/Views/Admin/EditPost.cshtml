@@ -13,7 +13,7 @@
 
 <h1>Edit Post</h1>
 
-<form asp-action="EditPost" method="POST">
+<form asp-action="EditPost" method="POST" enctype="multipart/form-data">
 	<div class="form-group">
 		<label for="Title">Title</label>
 		<input asp-for="Title" class="form-control" />
@@ -40,6 +40,17 @@
 			<input asp-for="IsLive" type="checkbox" /> Is live?
 		</label>
 	</div>
+	<div class="form-group">
+		<label for="PodcastFile">Podcast file (optional)</label>
+		<input type="file" class="form-control-file" id="PodcastFile" name="PodcastFile">
+	</div>
 
 	<input type="submit" value="Save" class="btn btn-primary" />
+</form>
+
+<hr class="my-5"/>
+
+<form asp-action="DeletePost" method="post" class="text-right">
+	<input type="hidden" name="PostID" value="@Model.PostID" />
+	<input type="submit" value="Delete" class="btn btn-primary" />
 </form>

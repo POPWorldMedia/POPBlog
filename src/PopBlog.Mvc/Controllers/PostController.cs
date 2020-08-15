@@ -38,7 +38,7 @@ namespace PopBlog.Mvc.Controllers
 		}
 
 		[HttpGet("/post/image/{id}")]
-		public async Task<ActionResult> Image(int id)
+		public async Task<IActionResult> Image(int id)
 		{
 			var image = await _imageService.GetImage(id);
 			if (image == null)
@@ -60,7 +60,7 @@ namespace PopBlog.Mvc.Controllers
 		}
 
 		[HttpPost("/post/addcomment")]
-		public async Task<ActionResult> AddComment(CommentPost comment)
+		public async Task<IActionResult> AddComment(CommentPost comment)
 		{
 			var post = await _postService.Get(comment.PostID);
 			if (post == null)
@@ -77,6 +77,17 @@ namespace PopBlog.Mvc.Controllers
 			}
 			var commentID = await _commentService.Create(comment.PostID, comment.FullText, comment.Name, comment.Email, comment.WebSite);
 			return new RedirectResult(Url.Action("Detail", new { urlTitle = post.UrlTitle }) + "#" + commentID);
+		}
+
+		[HttpGet("/post/download/{id}")]
+		public async Task<IActionResult> Download(int id)
+		{
+			var link = await _postService.GetDownloadLink(id);
+			if (string.IsNullOrEmpty(link))
+				return StatusCode(404);
+			await _postService.IncrementDownloadCount(id);
+			link = link.Replace("#", "%23");
+			return Redirect(link);
 		}
 	}
 }

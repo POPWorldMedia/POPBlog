@@ -1,26 +1,13 @@
-﻿@using System.Security.Claims
-@using PopBlog.Mvc
+﻿@using PopBlog.Mvc
 @model PopBlog.Mvc.Models.PostDisplayContainer
 @inject IConfig Config
 @{
 	var recaptchaKey = Config.ReCaptchaSiteKey;
 	ViewBag.Title = Model.Post.Title;
+	ViewBag.IsDetail = true;
 }
 
-<div class="my-3">
-	<h1 class="blogPostTitle mb-3">@Model.Post.Title</h1>
-	<h3 class="blogPostDetails my-3">
-		posted by @Model.Post.Name | @Model.Post.TimeStamp.ToString("dddd, MMMM d, yyyy, h:mm tt") | <a href="#comments">comments</a>: @Model.Post.Replies
-		@if (User.HasClaim(ClaimTypes.Role, "Admin"))
-		{
-			<text>|</text> <a asp-controller="Admin" asp-action="EditPost" asp-route-postID="@Model.Post.PostID">Edit</a>
-		}
-	</h3>
-	<div class="postBody">
-		@Html.Raw(Model.Post.FullText)
-	</div>
-	<hr class="mb-5" />
-</div>
+@Html.Partial("_Post", Model.Post)
 
 <a name="comments"></a>
 <div id="Comments">
