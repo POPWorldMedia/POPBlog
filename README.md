@@ -26,3 +26,18 @@ https://www.myget.org/F/popblog/api/v3/index.json
 The latest CI Build npm package feed for the meager script needs is here:  
 https://www.myget.org/F/popblog/npm/  
 You'll need to do copying of the various files, which the project views expect to be in `/lib/{packagename}`.
+
+## Upload size limits
+
+If you plan to use the podcast serving mechanism and run the app on an IIS-based service (including Windows-based Azure App Services), you'll need to figure out how to raise the request size limit in old-fashioned web.config. [This answer on StackOverflow](https://stackoverflow.com/a/47112438/99897) should help. This is necessary to upload large files via the admin.
+
+## What's in `appsettings.json`?
+
+* `PopBlogConnectionString`: The connection string to your database. For local dev, use something like `server=localhost;Database=popblog;Trusted_Connection=True;`.
+* `ReCaptchaSiteKey` and `ReCaptchaSecretKey`: You'll need these from [Google reCAPTCHA](https://www.google.com/recaptcha) to help avoid comment spam.
+* `BlogTitle`: This appears after a hyphen on all of the page `<title>` tags.
+* `BlogDescription`: This appears in the `<h1>` of the blog home page, and in front of the hyphen on the home page `<title>`.
+* `TimeZone`: And integer represnting the time zone you want all of the times to be set for. For example, `-5` is US Eastern Time. It will adjust during Daylight Saving.
+* `StorageConnectionString`: The connection string to your Azure Storage Account where the blobs go. Use `UseDevelopmentStorage=true` for the local storage emulator.
+* `StorageContainerName`: The container in your blob storage where you're gonna drop your podcast masterpieces. Make sure the container is publicly accessible, or your users will be `403`'d.
+* `StorageAccountBaseUrl`: The base URL for where your blob container is. For local, it's probably `http://127.0.0.1:10000/devstoreaccount1`, for a production location, it's something like `https://[storageaccountname].blob.core.windows.net`. **Do not** include the trailing slash.
