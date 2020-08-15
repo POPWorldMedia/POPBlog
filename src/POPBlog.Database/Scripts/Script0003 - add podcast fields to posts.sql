@@ -1,4 +1,4 @@
-﻿ALTER TABLE POSTS
+﻿ALTER TABLE [Posts]
 ADD [IsPodcastPost] bit DEFAULT(0) NOT NULL,
 	[FileName] nvarchar(256) NULL,
 	[DownloadCount] int DEFAULT(0) NOT NULL,
