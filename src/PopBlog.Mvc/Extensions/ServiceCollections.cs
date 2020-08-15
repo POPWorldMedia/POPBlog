@@ -29,6 +29,7 @@ namespace PopBlog.Mvc.Extensions
 			serviceCollection.AddTransient<ICommentService, CommentService>();
 			serviceCollection.AddTransient<ITextParsingService, TextParsingService>();
 			serviceCollection.AddTransient<IIpBanService, IpBanService>();
+			serviceCollection.AddTransient<IRssService, RssService>();
 
 			serviceCollection.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
 

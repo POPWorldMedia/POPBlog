@@ -69,7 +69,7 @@ namespace PopBlog.Mvc.Services
 			var container = new FileAbstraction(fileName, newStream);
 			var file = TagLib.File.Create(container);
 			post.Length = file.Properties.Duration.ToString(@"h\:mm\:ss");
-			post.Size = $"{stream.Length/1024/1024}MB";
+			post.Size = (int)stream.Length;
 			await _storageRepository.Upload(fileName, stream);
 		}
 

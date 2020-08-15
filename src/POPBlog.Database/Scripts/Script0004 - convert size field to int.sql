@@ -1,0 +1,7 @@
+﻿ALTER TABLE [Posts]
+DROP COLUMN [Size]
+GO
+
+ALTER TABLE [Posts]
+ADD [Size] int DEFAULT(0) NULL
+GO

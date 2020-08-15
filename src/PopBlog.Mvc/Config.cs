@@ -14,6 +14,10 @@ namespace PopBlog.Mvc
 		string StorageConnectionString { get; }
 		string StorageContainerName { get; }
 		string StorageAccountBaseUrl { get; }
+		string Language { get; }
+		string FeedImageUrl { get; }
+		string ItunesCategory { get; }
+		bool? ItunesExplicit { get; }
 	}
 
 	public class Config : IConfig
@@ -34,5 +38,9 @@ namespace PopBlog.Mvc
 		public string StorageConnectionString => _configuration["StorageConnectionString"];
 		public string StorageContainerName => _configuration["StorageContainerName"];
 		public string StorageAccountBaseUrl => _configuration["StorageAccountBaseUrl"];
+		public string Language => _configuration["Language"] ?? "en";
+		public string FeedImageUrl => _configuration["FeedImageUrl"];
+		public string ItunesCategory => _configuration["ItunesCategory"];
+		public bool? ItunesExplicit => Convert.ToBoolean(_configuration["ItunesExplicit"]);
 	}
 }

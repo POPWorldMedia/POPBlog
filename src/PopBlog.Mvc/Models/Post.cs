@@ -19,6 +19,6 @@ namespace PopBlog.Mvc.Models
 		public string FileName { get; set; }
 		public int DownloadCount { get; set; }
 		public string Length { get; set; }
-		public string Size { get; set; }
+		public int Size { get; set; }
 	}
 }

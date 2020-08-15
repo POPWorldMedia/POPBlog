@@ -38,6 +38,13 @@ If you plan to use the podcast serving mechanism and run the app on an IIS-based
 * `BlogTitle`: This appears after a hyphen on all of the page `<title>` tags.
 * `BlogDescription`: This appears in the `<h1>` of the blog home page, and in front of the hyphen on the home page `<title>`.
 * `TimeZone`: And integer represnting the time zone you want all of the times to be set for. For example, `-5` is US Eastern Time. It will adjust during Daylight Saving.
+
+If you're using this to serve a podcast, you're going to need this stuff, too. Don't yell at me, Apple wants this stuff:
+
 * `StorageConnectionString`: The connection string to your Azure Storage Account where the blobs go. Use `UseDevelopmentStorage=true` for the local storage emulator.
 * `StorageContainerName`: The container in your blob storage where you're gonna drop your podcast masterpieces. Make sure the container is publicly accessible, or your users will be `403`'d.
 * `StorageAccountBaseUrl`: The base URL for where your blob container is. For local, it's probably `http://127.0.0.1:10000/devstoreaccount1`, for a production location, it's something like `https://[storageaccountname].blob.core.windows.net`. **Do not** include the trailing slash.
+* `Language`: The two-letter ISO 639 code for the language of your podcast. Defaults to `en`.
+* `FeedImageUrl`: Location of your feed image.
+* `ItunesCategory`: From [Apple's list](https://help.apple.com/itc/podcasts_connect/#/itc9267a2f12) of categories.
+* `ItunesExplicit`: Boolean to let Apple know if you use naughty words.

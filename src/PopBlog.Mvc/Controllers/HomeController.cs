@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using PopBlog.Mvc.Models;
@@ -17,14 +16,14 @@ namespace PopBlog.Mvc.Controllers
 		private readonly IUserService _userService;
 		private readonly IReCaptchaService _reCaptchaService;
 		private readonly IPostService _postService;
-		private readonly IConfig _config;
+		private readonly IRssService _rssService;
 
-		public HomeController(IUserService userService, IReCaptchaService reCaptchaService, IPostService postService, IConfig config)
+		public HomeController(IUserService userService, IReCaptchaService reCaptchaService, IPostService postService, IRssService rssService)
 		{
 			_userService = userService;
 			_reCaptchaService = reCaptchaService;
 			_postService = postService;
-			_config = config;
+			_rssService = rssService;
 		}
 
 		[HttpGet("/")]
@@ -102,37 +101,7 @@ namespace PopBlog.Mvc.Controllers
 		[ResponseCache(Duration = 600)]
 		public async Task<ActionResult> Rss()
 		{
-			var title = _config.BlogTitle;
-			var rootLink = "https://" + Request.Host + "/";
-			var description = _config.BlogDescription;
-			var posts = await _postService.GetLast20LiveAndPublic();
-			XNamespace atom = "http://www.w3.org/2005/Atom";
-			XDocument xml;
-			xml = new XDocument(
-				new XElement("rss",
-					new XAttribute("version", "2.0"),
-					new XAttribute(XNamespace.Xmlns + "atom", atom),
-					new XElement("channel",
-						new XElement("title", title),
-						new XElement("link", rootLink),
-						new XElement(atom + "link",
-							new XAttribute("href", rootLink + "home/rss"),
-							new XAttribute("rel", "self"),
-							new XAttribute("type", "application/rss+xml")),
-						new XElement("description", description),
-						new XElement("ttl", "15"),
-						from item in posts.ToList()
-						select new XElement("item",
-							new XElement("title", item.Title),
-							new XElement("author", item.Name),
-							new XElement("link", $"{rootLink}blog/{item.UrlTitle}"),
-							new XElement("guid", $"{rootLink}blog/{item.UrlTitle}"),
-							new XElement("pubDate", item.TimeStamp.ToString("R")),
-							new XElement("description", new XCData(item.FullText))
-						)
-					)
-				)
-			);
+			var xml = await _rssService.GetMainFeed();
 			return Content(xml.ToString(), "text/xml");
 		}
 	}
