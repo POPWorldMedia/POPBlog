@@ -78,6 +78,7 @@ namespace PopBlog.Mvc.Services
 			if (!string.IsNullOrEmpty(_config.Author))
 			{
 				channel.Add(new XElement(_itunes + "author", _config.Author));
+				channel.Add(new XElement("author", _config.Author));
 			}
 		}
 		private async Task AddItems(XDocument xml, string rootLink)
