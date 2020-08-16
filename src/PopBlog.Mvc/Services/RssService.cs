@@ -31,7 +31,7 @@ namespace PopBlog.Mvc.Services
 		public async Task<XDocument> GetMainFeed()
 		{
 			var title = _config.BlogTitle;
-			var rootLink = "https://" + _httpContextAccessor.HttpContext.Request.Host + "/";
+			var rootLink = $"http{(_httpContextAccessor.HttpContext.Request.IsHttps ? "s" : "")}://{_httpContextAccessor.HttpContext.Request.Host}/";
 			var description = _config.BlogDescription;
 			var xml = new XDocument(
 				new XElement("rss",
