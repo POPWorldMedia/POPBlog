@@ -114,6 +114,7 @@ namespace PopBlog.Mvc.Services
 					new XAttribute("length", item.Size),
 					new XAttribute("type", "audio/mpeg")));
 				element.Add(new XElement(_itunes + "duration", item.Length));
+				element.Add(new XElement(_itunes + "category", _config.ItunesCategory));
 			}
 			return element;
 		}
