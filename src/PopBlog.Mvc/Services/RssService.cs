@@ -71,7 +71,7 @@ namespace PopBlog.Mvc.Services
 
 			if (!string.IsNullOrEmpty(_config.ItunesCategory))
 			{
-				channel.Add(new XElement(_itunes + "category", _config.ItunesCategory));
+				channel.Add(new XElement(_itunes + "category", new XAttribute("text", _config.ItunesCategory)));
 				channel.Add(new XElement(_itunes + "explicit", _config.ItunesExplicit));
 			}
 
@@ -114,7 +114,7 @@ namespace PopBlog.Mvc.Services
 					new XAttribute("length", item.Size),
 					new XAttribute("type", "audio/mpeg")));
 				element.Add(new XElement(_itunes + "duration", item.Length));
-				element.Add(new XElement(_itunes + "category", _config.ItunesCategory));
+				element.Add(new XElement(_itunes + "category", new XAttribute("text", _config.ItunesCategory)));
 			}
 			return element;
 		}
