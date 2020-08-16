@@ -80,6 +80,7 @@ namespace PopBlog.Mvc.Controllers
 		}
 
 		[HttpGet("/post/download/{id}")]
+		[HttpHead("/post/download/{id}")]
 		public async Task<IActionResult> Download(int id)
 		{
 			var link = await _postService.GetDownloadLink(id);

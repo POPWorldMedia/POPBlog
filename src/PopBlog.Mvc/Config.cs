@@ -18,6 +18,7 @@ namespace PopBlog.Mvc
 		string FeedImageUrl { get; }
 		string ItunesCategory { get; }
 		bool? ItunesExplicit { get; }
+		string Author { get; }
 	}
 
 	public class Config : IConfig
@@ -42,5 +43,6 @@ namespace PopBlog.Mvc
 		public string FeedImageUrl => _configuration["FeedImageUrl"];
 		public string ItunesCategory => _configuration["ItunesCategory"];
 		public bool? ItunesExplicit => Convert.ToBoolean(_configuration["ItunesExplicit"]);
+		public string Author => _configuration["Author"];
 	}
 }
