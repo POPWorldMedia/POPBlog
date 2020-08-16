@@ -98,6 +98,7 @@ namespace PopBlog.Mvc.Controllers
 		}
 
 		[HttpGet("/rss")]
+		[HttpHead("/rss")]
 		[ResponseCache(Duration = 600)]
 		public async Task<ActionResult> Rss()
 		{
