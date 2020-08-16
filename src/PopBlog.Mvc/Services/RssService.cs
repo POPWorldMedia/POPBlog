@@ -80,6 +80,13 @@ namespace PopBlog.Mvc.Services
 				channel.Add(new XElement(_itunes + "author", _config.Author));
 				channel.Add(new XElement("author", _config.Author));
 			}
+
+			if (!string.IsNullOrEmpty(_config.OwnerEmail) && !string.IsNullOrEmpty(_config.OwnerName))
+			{
+				channel.Add(new XElement(_itunes + "owner", 
+					new XElement(_itunes + "name", _config.OwnerName),
+					new XElement(_itunes + "email", _config.OwnerEmail)));
+			}
 		}
 		private async Task AddItems(XDocument xml, string rootLink)
 		{
@@ -105,7 +112,7 @@ namespace PopBlog.Mvc.Services
 				element.Add(new XElement("enclosure",
 					new XAttribute("url", $"{rootLink}post/download/{item.PostID}"),
 					new XAttribute("length", item.Size),
-					new XAttribute("type", "audio/x-mp3")));
+					new XAttribute("type", "audio/mpeg")));
 				element.Add(new XElement(_itunes + "duration", item.Length));
 			}
 			return element;

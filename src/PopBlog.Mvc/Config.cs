@@ -19,6 +19,8 @@ namespace PopBlog.Mvc
 		string ItunesCategory { get; }
 		bool? ItunesExplicit { get; }
 		string Author { get; }
+		string OwnerName { get; }
+		string OwnerEmail { get; }
 	}
 
 	public class Config : IConfig
@@ -44,5 +46,7 @@ namespace PopBlog.Mvc
 		public string ItunesCategory => _configuration["ItunesCategory"];
 		public bool? ItunesExplicit => Convert.ToBoolean(_configuration["ItunesExplicit"]);
 		public string Author => _configuration["Author"];
+		public string OwnerName => _configuration["OwnerName"];
+		public string OwnerEmail => _configuration["OwnerEmail"];
 	}
 }
