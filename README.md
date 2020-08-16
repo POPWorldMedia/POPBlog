@@ -48,3 +48,4 @@ If you're using this to serve a podcast, you're going to need this stuff, too. D
 * `FeedImageUrl`: Location of your feed image.
 * `ItunesCategory`: From [Apple's list](https://help.apple.com/itc/podcasts_connect/#/itc9267a2f12) of categories.
 * `ItunesExplicit`: Boolean to let Apple know if you use naughty words.
+* `Author`: Appears in the channel definition for Apple. Put your company name or other entity here.
