@@ -23,7 +23,7 @@
 		<p><a asp-action="Download" asp-controller="Post" asp-route-id="@Model.PostID">Download...</a> <text>| Length: </text> @Model.Length <text>| Size: </text> @(Model.Size/1024/1024)MB <text>| Downloads: </text> @Model.DownloadCount</p>
 	}
 	<small class="blogPostDetails my-3">
-		posted by @Model.Name | @Model.TimeStamp.ToString("dddd, MMMM d, yyyy, h:mm tt") | <a href="#comments">comments</a>: @Model.Replies
+		posted by @Model.Name | @Model.TimeStamp.ToString("dddd, MMMM d, yyyy, h:mm tt") | <a asp-controller="Post" asp-action="Detail" asp-route-urlTitle="@Model.UrlTitle" asp-fragment="comments">comments</a>: @Model.Replies
 		@if (User.HasClaim(ClaimTypes.Role, "Admin"))
 		{
 			<text>|</text>
