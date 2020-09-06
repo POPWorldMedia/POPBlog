@@ -18,14 +18,16 @@ namespace PopBlog.Mvc.Services
 		private readonly IPostRepository _postRepository;
 		private readonly IConfig _config;
 		private readonly IHttpContextAccessor _httpContextAccessor;
+		private readonly IPostService _postService;
 		private readonly XNamespace _atom = "http://www.w3.org/2005/Atom";
 		private readonly XNamespace _itunes = "http://www.itunes.com/dtds/podcast-1.0.dtd";
 
-		public RssService(IPostRepository postRepository, IConfig config, IHttpContextAccessor httpContextAccessor)
+		public RssService(IPostRepository postRepository, IConfig config, IHttpContextAccessor httpContextAccessor, IPostService postService)
 		{
 			_postRepository = postRepository;
 			_config = config;
 			_httpContextAccessor = httpContextAccessor;
+			_postService = postService;
 		}
 
 		public async Task<XDocument> GetMainFeed()
@@ -93,10 +95,10 @@ namespace PopBlog.Mvc.Services
 			var posts = await _postRepository.GetLast20LiveAndPublic();
 			var channel = xml.Element("rss").Element("channel");
 			foreach (var item in posts)
-				channel.Add(PopulateItem(item, rootLink));
+				channel.Add(await PopulateItem(item, rootLink));
 		}
 
-		private XElement PopulateItem(Post item, string rootLink)
+		private async Task<XElement> PopulateItem(Post item, string rootLink)
 		{
 			var link = $"{rootLink}blog/{item.UrlTitle}";
 			var element = new XElement("item",
@@ -109,8 +111,11 @@ namespace PopBlog.Mvc.Services
 			);
 			if (item.IsPodcastPost)
 			{
+				var enclosureLink = $"{rootLink}post/download/{item.PostID}";
+				if (_config.IsUsingDirectDownload.HasValue && _config.IsUsingDirectDownload.Value)
+					enclosureLink = await _postService.GetDownloadLink(item.PostID);
 				element.Add(new XElement("enclosure",
-					new XAttribute("url", $"{rootLink}post/download/{item.PostID}"),
+					new XAttribute("url", enclosureLink),
 					new XAttribute("length", item.Size),
 					new XAttribute("type", "audio/mpeg")));
 				element.Add(new XElement(_itunes + "duration", item.Length));
