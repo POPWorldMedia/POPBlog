@@ -21,6 +21,7 @@ namespace PopBlog.Mvc
 		string Author { get; }
 		string OwnerName { get; }
 		string OwnerEmail { get; }
+		bool? IsUsingDirectDownload { get; }
 	}
 
 	public class Config : IConfig
@@ -48,5 +49,6 @@ namespace PopBlog.Mvc
 		public string Author => _configuration["Author"];
 		public string OwnerName => _configuration["OwnerName"];
 		public string OwnerEmail => _configuration["OwnerEmail"];
+		public bool? IsUsingDirectDownload => Convert.ToBoolean(_configuration["IsUsingDirectDownload"]);
 	}
 }

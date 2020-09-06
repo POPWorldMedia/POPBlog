@@ -28,6 +28,7 @@ function initEditor(id) {
 		relative_urls: false,
 		plugins: ["lists", "code", "link", "image"],
 		contextmenu: false,
+		content_css: ['/lib/bootstrap/dist/css/bootstrap.min.css','/lib/PopBlog/dist/edit.min.css'],
 
 		menubar: "edit insert view format table tools",
 		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent bullist numlist | imgmgr imgfoldermgr | link image code",

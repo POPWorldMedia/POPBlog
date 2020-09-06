@@ -1,0 +1,7 @@
+﻿body#tinymce {
+	padding:1em;
+}
+blockquote {
+	margin-left: 2em; padding-left: 1em;
+	border-left: 8px solid #dcdcdc;
+}
