@@ -41,7 +41,7 @@ If you plan to use the podcast serving mechanism and run the app on an IIS-based
 
 If you're using this to serve a podcast, you're going to need this stuff, too. Don't yell at me, Apple wants this stuff:
 
-* `StorageConnectionString`: The connection string to your Azure Storage Account where the blobs go. Use `UseDevelopmentStorage=true` for the local storage emulator.
+* `StorageConnectionString`: The connection string to your Azure Storage Account where the blobs go. Use `UseDevelopmentStorage=true` for the local storage emulator. Remember that you need to set your storage container to have anonymous read access.
 * `StorageContainerName`: The container in your blob storage where you're gonna drop your podcast masterpieces. Make sure the container is publicly accessible, or your users will be `403`'d.
 * `StorageAccountBaseUrl`: The base URL for where your blob container is. For local, it's probably `http://127.0.0.1:10000/devstoreaccount1`, for a production location, it's something like `https://[storageaccountname].blob.core.windows.net`. **Do not** include the trailing slash.
 * `Language`: The two-letter ISO 639 code for the language of your podcast. Defaults to `en`.
@@ -50,3 +50,4 @@ If you're using this to serve a podcast, you're going to need this stuff, too. D
 * `ItunesExplicit`: Boolean to let Apple know if you use naughty words.
 * `Author`: Appears in the channel definition for Apple. Put your company name or other entity here.
 * `OwnerName` and `OwnerEmail`: More things to let Apple know who you are. They're kind of high maintenance.
+* `IsUsingDirectDownload`: Skip the counter and redirect and link directly to the file in storage. This is for services like Apple that demand random access to the file itself.

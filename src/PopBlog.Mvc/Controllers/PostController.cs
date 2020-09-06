@@ -87,7 +87,6 @@ namespace PopBlog.Mvc.Controllers
 			if (string.IsNullOrEmpty(link))
 				return StatusCode(404);
 			await _postService.IncrementDownloadCount(id);
-			link = link.Replace("#", "%23");
 			return Redirect(link);
 		}
 	}

@@ -1,5 +1,9 @@
 ﻿@using System.Security.Claims
+@using PopBlog.Mvc
+@using PopBlog.Mvc.Services
 @model PopBlog.Mvc.Models.Post
+@inject IPostService PostService
+@inject IConfig Config
 @{
 	Layout = null;
 	var isDetail = false;
@@ -7,6 +11,10 @@
 	{
 		isDetail = (bool) ViewBag.IsDetail;
 	}
+	var downloadLink = Config.IsUsingDirectDownload.HasValue && Config.IsUsingDirectDownload.Value 
+		? await PostService.GetDownloadLink(Model.PostID) 
+		: Url.Action("Download", "Post", new {id = Model.PostID});
+	var showDownloadCount = !(Config.IsUsingDirectDownload.HasValue && Config.IsUsingDirectDownload.Value);
 }
 
 <div class="my-3">
@@ -20,7 +28,10 @@
 	}
 	@if (Model.IsPodcastPost)
 	{
-		<p><a asp-action="Download" asp-controller="Post" asp-route-id="@Model.PostID">Download...</a> <text>| Length: </text> @Model.Length <text>| Size: </text> @(Model.Size/1024/1024)MB <text>| Downloads: </text> @Model.DownloadCount</p>
+		<p><a href="@downloadLink">Download...</a> <text>| Length: </text> @Model.Length <text>| Size: </text> @(Model.Size/1024/1024)MB 
+			@if (showDownloadCount){
+			<text>| Downloads: </text> @Model.DownloadCount }
+		</p>
 	}
 	<small class="blogPostDetails my-3">
 		posted by @Model.Name | @Model.TimeStamp.ToString("dddd, MMMM d, yyyy, h:mm tt") | <a asp-controller="Post" asp-action="Detail" asp-route-urlTitle="@Model.UrlTitle" asp-fragment="comments">comments</a>: @Model.Replies

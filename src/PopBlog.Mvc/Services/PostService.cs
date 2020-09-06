@@ -180,6 +180,7 @@ namespace PopBlog.Mvc.Services
 			if (post == null)
 				return null;
 			var link = $"{_config.StorageAccountBaseUrl}/{_config.StorageContainerName}/{post.FileName}";
+			link = link.Replace("#", "%23");
 			return link;
 		}
 
