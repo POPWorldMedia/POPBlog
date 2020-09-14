@@ -10,7 +10,7 @@ namespace PopBlog.Mvc.Services
 {
 	public interface ICommentService
 	{
-		Task<IEnumerable<CommentLink>> GetRecent();
+		Task<IEnumerable<CommentLinkContainer>> GetRecent();
 		Task Delete(int commentID);
 		Task<int> Create(int postID, string fullText, string name, string email, string webSite);
 		Task<IEnumerable<Comment>> GetByPost(int postID);
@@ -35,9 +35,9 @@ namespace PopBlog.Mvc.Services
 			_timeAdjustService = timeAdjustService;
 		}
 
-		public async Task<IEnumerable<CommentLink>> GetRecent()
+		public async Task<IEnumerable<CommentLinkContainer>> GetRecent()
 		{
-			return await _commentRepository.GetRecentCommentIDTitleUrlDictionary();
+			return await _commentRepository.GetRecentCommentLinkContainers();
 		}
 
 		public async Task Delete(int commentID)

@@ -9,7 +9,7 @@ namespace PopBlog.Mvc.Repositories
 {
 	public interface ICommentRepository
 	{
-		Task<IEnumerable<CommentLink>> GetRecentCommentIDTitleUrlDictionary();
+		Task<IEnumerable<CommentLinkContainer>> GetRecentCommentLinkContainers();
 		Task<int> Create(Comment comment);
 		Task Delete(int commentID);
 		Task<IEnumerable<Comment>> GetByPost(int postID);
@@ -26,10 +26,10 @@ namespace PopBlog.Mvc.Repositories
 			_config = config;
 		}
 
-		public async Task<IEnumerable<CommentLink>> GetRecentCommentIDTitleUrlDictionary()
+		public async Task<IEnumerable<CommentLinkContainer>> GetRecentCommentLinkContainers()
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
-			var comments = await connection.QueryAsync<CommentLink>("SELECT TOP 30 C.CommentID, P.UrlTitle, P.Title, P.TimeStamp FROM Comments C JOIN Posts P ON C.PostID = P.PostID ORDER BY C.TimeStamp DESC");
+			var comments = await connection.QueryAsync<CommentLinkContainer>("SELECT TOP 30 C.CommentID, P.UrlTitle, P.Title, C.TimeStamp, P.PostID FROM Comments C JOIN Posts P ON C.PostID = P.PostID ORDER BY C.TimeStamp DESC");
 			return comments;
 		}
 
