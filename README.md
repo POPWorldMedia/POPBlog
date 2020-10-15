@@ -4,7 +4,7 @@ This is a lightweight blog app that uses ASP.NET Core, SQL Server and Azure stor
 
 ## Roadmap
 
-The intention for v1 is to do simple blog posts, RSS, optional attachments, storage of podcast files in Azure storage. It will be done when it has been placed in a several production applications.
+The intention for v1 is to do simple blog posts, RSS, optional attachments, storage of podcast files in Azure storage. It will be done when it has been placed in several production applications. So far it's on [my blog](https://jeffputz.com/) and the [CoasterBuzz Podcast](https://podcast.coasterbuzz.com/).
 
 ## About this project
 
@@ -14,7 +14,7 @@ This is based roughly on my personal blog, which was first posted in the late ou
 
 Run the database project by passing your database connection string as the only parameter, and dbup will magically make the schema current.
 
-The MVC project can be used as the class library with which to feed your web app. Override views with your own markup in the web project, along with your assets and such. Even better, go the package route.
+The MVC project can be used as a class library to feed your web app by referencing the project. Override views with your own markup in the web project, along with your assets and such. Even better, go the package route.
 
 ## Go the package route
 
