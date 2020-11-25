@@ -10,7 +10,7 @@ This is based roughly on my personal blog, which was first posted in the late au
 
 Run the database project by passing your database connection string as the only parameter, and dbup will magically make the schema current.
 
-The MVC project can be used as the class library with which to feed your web app. Override views with your own markup in the web project, along with your assets and such. Even better, go the package route.
+The MVC project can be used as a class library to feed your web app by referencing the project. Override views with your own markup in the web project, along with your assets and such. Even better, go the package route.
 
 ## Go the package route
 
