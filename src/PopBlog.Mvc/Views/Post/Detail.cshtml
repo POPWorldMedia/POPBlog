@@ -11,21 +11,30 @@
 
 <a name="comments"></a>
 <div id="Comments">
-	<h2 class="my-5">Comments</h2>
+	<h2 class="my-3">Comments</h2>
 	@foreach (var comment in Model.Comments)
 	{
-		<div id="@("comment"+comment.CommentID)" class="comment mb-5">
-			<h3 class="commentDetails"><a href="@comment.WebSite" target="_blank">@comment.Name</a>, @comment.TimeStamp.ToString("MMMM d, yyyy, h:mm tt") <a name="@(comment.CommentID)" href="#@(comment.CommentID)">#</a> @if (User.Identity.IsAuthenticated)
-			{<text> | </text>@comment.IP<text> | </text><a href="mailto:@comment.Email">@comment.Email</a>}</h3>
-			<div class="commentText">@Html.Raw(comment.FullText)</div>
-			@if (User.Identity.IsAuthenticated)
-			{
-				<form asp-controller="Admin" asp-action="DeleteComment" asp-route-id="@comment.CommentID">
-					<p><input type="submit" value="Delete" class="btn btn-primary" /></p>
-					<input type="hidden" id="PostID" name="PostID" value="@comment.PostID" />
-				</form>
-			}
-		</div>
+	    <div id="@("comment" + comment.CommentID)" class="card mb-3">
+            <div class="card-body">
+                <h3 class="card-title"><a href="@comment.WebSite" target="_blank">@comment.Name</a></h3>
+                <small class="card-subtitle text-muted">@comment.TimeStamp.ToString("MMMM d, yyyy, h:mm tt") <a name="@(comment.CommentID)" href="#@(comment.CommentID)">#</a>
+                    @if (User.Identity.IsAuthenticated)
+                    {<text> | </text>@comment.IP<text> | </text><a href="mailto:@comment.Email">@comment.Email</a>}
+                </small>
+                @Html.Raw(comment.FullText)
+            </div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form asp-controller="Admin" asp-action="DeleteComment" asp-route-id="@comment.CommentID">
+                    <p><input type="submit" value="Delete" class="btn btn-primary mx-3"/></p>
+                    <input type="hidden" id="PostID" name="PostID" value="@comment.PostID"/>
+                </form>
+            }
+        </div>
+	}
+	@if (!Model.Comments.Any() && !Model.Post.IsClosed)
+	{
+		<p>No comments yet.</p>
 	}
 </div>
 @if (Model.Post.IsClosed)
@@ -34,7 +43,7 @@
 }
 else
 {
-	<hr class="mb-5"/>
+	<hr class="mb-3"/>
 	<div id="CommentForm">
 		<form id="ValidateCommentForm" asp-controller="Post" asp-action="AddComment">
 			<h3>Post your comment:</h3>
@@ -59,7 +68,6 @@ else
 				<textarea id="FullText" name="FullText" rows="10" class="form-control"></textarea>
 			</div>
 			<button id="SendCommentButton" type="submit" class="btn btn-primary mb-3">Send comment</button>
-			<div id="ResponseLabel" class="alert alert-warning"></div>
 			<input type="hidden" name="Token" id="Token" />
 		</form>
 	</div>
@@ -71,7 +79,7 @@ else
 	<script>
 		grecaptcha.ready(function() {
 			grecaptcha.execute("@recaptchaKey", { action: "comment" }).then(function (token) {
-				document.querySelector("#Token").val(token);
+				document.querySelector("#Token").value = token;
 			});
 		});
 	</script>
