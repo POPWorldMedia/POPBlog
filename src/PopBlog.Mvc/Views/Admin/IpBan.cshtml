@@ -20,7 +20,7 @@
 
 <form asp-controller="Admin" asp-action="DeleteIPBan" method="POST">
 	<div class="form-group">
-		<select type="text" id="BanList" name="BanList" multiple="multiple" class="form-control" style="height: 300px;">
+		<select type="text" id="BanList" name="BanList" multiple="multiple" class="form-control mb-3" style="height: 300px;">
 			@foreach (var item in Model)
 			{
 				<option>@item</option>
