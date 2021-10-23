@@ -1,6 +1,6 @@
 # POP Blog
 
-This is a lightweight blog app that uses ASP.NET v5, SQL Server and Azure storage for podcast files.
+This is a lightweight blog app that uses ASP.NET v6, SQL Server and Azure storage for podcast files.
 
 ## About this project
 
@@ -20,12 +20,12 @@ https://www.npmjs.com/package/@popworldmedia/popblog
 
 The latest CI build NuGet package feed for the MVC project is here:  
 https://www.myget.org/F/popblog/api/v3/index.json   
-
+  
 [![Build Status](https://dev.azure.com/popw/POP%20Blog/_apis/build/status/POP%20Blog-ASP.NET%20Core-CI?branchName=main)](https://dev.azure.com/popw/POP%20Blog/_build/latest?definitionId=6&branchName=main)  
 
 The latest CI Build npm package feed for the meager script needs is here:  
 https://www.myget.org/F/popblog/npm/  
-You'll need to do copying of the various files, which the project views expect to be in `/lib/{packagename}`.
+You'll need to do copying of the various files, which the project views expect to be in `/lib/{packagename}`.  
 
 ## Upload size limits
 

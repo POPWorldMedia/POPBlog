@@ -3,8 +3,8 @@
   <PropertyGroup>
 	  <AssemblyName>PopBlog.Mvc</AssemblyName>
 	  <PackageId>PopBlog.Mvc</PackageId>
-	  <AssemblyVersion>2.0.0</AssemblyVersion>
-	  <VersionPrefix>2.0.0</VersionPrefix>
+	  <AssemblyVersion>3.0.0</AssemblyVersion>
+	  <VersionPrefix>3.0.0</VersionPrefix>
 		<Description>A Razor class library with logic to render a simple blog engine.</Description>
 		<Authors>Jeff Putz</Authors>
     <TargetFramework>net6.0</TargetFramework>
