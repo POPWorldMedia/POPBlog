@@ -1,20 +1,48 @@
-using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PopBlog.Mvc.Extensions;
+using PopBlog.Mvc.Services;
 
-namespace PopBlog.Web
+var builder = WebApplication.CreateBuilder(args);
+
+var services = builder.Services;
+
+services.AddControllersWithViews();
+services.AddRazorPages();
+
+services.AddAuthentication(options => options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme)
+	.AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options => options.LoginPath = "/");
+
+services.AddAuthorization(options => options.AddPolicy("Admin", authBuilder => authBuilder.RequireAuthenticatedUser()));
+
+services.AddPopBlogServices();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
 {
-	public class Program
-	{
-		public static void Main(string[] args)
-		{
-			CreateHostBuilder(args).Build().Run();
-		}
-
-		public static IHostBuilder CreateHostBuilder(string[] args) =>
-			Host.CreateDefaultBuilder(args)
-				.ConfigureWebHostDefaults(webBuilder =>
-				{
-					webBuilder.UseStartup<Startup>();
-				});
-	}
+	app.UseDeveloperExceptionPage();
 }
+else
+{
+	app.UseExceptionHandler("/Home/Error");
+}
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseMiddleware<UserMiddleware>();
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+	endpoints.MapControllerRoute(
+		name: "default",
+		pattern: "{controller=Home}/{action=Index}/{id?}");
+});
+
+app.Run();
