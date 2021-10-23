@@ -7,17 +7,17 @@
 <h1>POP Blog Setup</h1>
 
 <form method="post" asp-controller="Home" asp-action="Setup">
-	<div class="form-group">
-		<label for="Name">Name</label>
+	<div class="mb-3">
+        <label for="Name" class="form-label">Name</label>
 		<input type="text" class="form-control" asp-for="Name">
 	</div>
-	<div class="form-group">
-		<label for="Email">Email address</label>
+	<div class="mb-3">
+		<label for="Email" class="form-label">Email address</label>
 		<input type="email" class="form-control" asp-for="Email">
 	</div>
-	<div class="form-group">
-		<label for="Password">Password</label>
+	<div class="mb-3">
+		<label for="Password" class="form-label">Password</label>
 		<input type="password" class="form-control" asp-for="Password">
 	</div>
-	<button type="submit" class="btn btn-primary">Submit</button>
+	<button type="submit" class="btn btn-primary mb-3">Submit</button>
 </form>

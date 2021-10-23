@@ -14,17 +14,17 @@
 <h1>Edit Post</h1>
 
 <form asp-action="EditContent" method="POST">
-	<div class="form-group">
+	<div class="mb-3">
 		<label for="Title">Title</label>
 		<input asp-for="Title" class="form-control" />
 	</div>
-	<div class="form-group">
+	<div class="mb-3">
 		<label for="ContentID">ContentID (will appear as /content/<i>yourID</i>)</label>
 		<input asp-for="ContentID" class="form-control" />
 	</div>
-	<div class="form-group">
+	<div class="mb-3">
 		<textarea asp-for="FullText" class="form-control" rows="30"></textarea>
 	</div>
 
-	<input type="submit" value="Save" class="btn btn-primary" />
+	<input type="submit" value="Save" class="btn btn-primary mb-3" />
 </form>

@@ -14,36 +14,36 @@
 <h1>New Post</h1>
 
 <form asp-action="NewPost" method="POST" enctype="multipart/form-data">
-	<div class="form-group">
+	<div class="mb-3">
 		<label for="Title">Title</label>
 		<input asp-for="Title" class="form-control" />
 	</div>
-	<div class="form-group">
+	<div class="mb-3">
 		<label for="Name">Name</label>
 		<input asp-for="Name" class="form-control" />
 	</div>
-	<div class="form-group">
+	<div class="mb-3">
 		<textarea asp-for="FullText" class="form-control" rows="30"></textarea>
 	</div>
-	<div class="form-group">
+	<div class="mb-3">
 		<label for="TimeStamp">Time Stamp</label>
 		<input asp-for="TimeStamp" type="text" class="form-control" />
 	</div>
 	<input asp-for="IsPrivate" type="hidden" />
-	<div class="checkbox">
+	<div class="form-check">
 		<label>
-			<input asp-for="IsClosed" type="checkbox" /> Is closed?
+			<input asp-for="IsClosed" type="checkbox" class="form-check-input" /> Is closed?
 		</label>
 	</div>
-	<div class="checkbox">
+	<div class="form-check">
 		<label>
-			<input asp-for="IsLive" type="checkbox" /> Is live?
+			<input asp-for="IsLive" type="checkbox" class="form-check-input" /> Is live?
 		</label>
 	</div>
-	<div class="form-group">
+	<div class="mb-3">
 		<label for="PodcastFile">Podcast file (optional)</label>
-		<input type="file" class="form-control-file" id="PodcastFile" name="PodcastFile">
+		<input type="file" class="form-control" id="PodcastFile" name="PodcastFile">
 	</div>
 
-	<input type="submit" value="Save" class="btn btn-primary" />
+	<input type="submit" value="Save" class="btn btn-primary mb-3" />
 </form>

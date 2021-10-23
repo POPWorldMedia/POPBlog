@@ -7,7 +7,7 @@
 	  <VersionPrefix>2.0.0</VersionPrefix>
 		<Description>A Razor class library with logic to render a simple blog engine.</Description>
 		<Authors>Jeff Putz</Authors>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
 	  <PackageProjectUrl>https://github.com/POPWorldMedia/POPBlog</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/POPWorldMedia/POPBlog</RepositoryUrl>
@@ -20,9 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.7.0" />
-    <PackageReference Include="Dapper" Version="2.0.78" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.0" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
+    <PackageReference Include="Dapper" Version="2.0.90" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="4.0.0-preview3.21293.2" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
   </ItemGroup>
 

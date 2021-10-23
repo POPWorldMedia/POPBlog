@@ -41,25 +41,25 @@ else
 			<input type="hidden" id="PostID" name="PostID" value="@Model.Post.PostID" />
 			@if (!User.Identity.IsAuthenticated)
 			{
-				<div class="form-group">
-					<label for="Name">Name</label>
+				<div class="mb-3">
+					<label for="Name" class="form-label">Name</label>
 					<input id="Name" name="Name" class="form-control" />
 				</div>
-				<div class="form-group">
-					<label for="Email">Email (will not be displayed)</label>
+				<div class="mb-3">
+					<label for="Email" class="form-label">Email (will not be displayed)</label>
 					<input id="Email" name="Email" class="form-control" type="email" />
 				</div>
-				<div class="form-group">
-					<label for="WebSite">Web site (optional)</label>
+				<div class="mb-3">
+					<label for="WebSite" class="form-label">Web site (optional)</label>
 					<input id="WebSite" name="WebSite" class="form-control" type="url" />
 				</div>
 			}
-			<div class="form-group">
-				<label for="FullText"></label>
+			<div class="mb-3">
+				<label for="FullText" class="form-label"></label>
 				<textarea id="FullText" name="FullText" rows="10" class="form-control"></textarea>
 			</div>
-			<button id="SendCommentButton" type="submit" class="btn btn-primary">Send comment</button>
-			<span id="ResponseLabel" class="warning"></span>
+			<button id="SendCommentButton" type="submit" class="btn btn-primary mb-3">Send comment</button>
+			<div id="ResponseLabel" class="alert alert-warning"></div>
 			<input type="hidden" name="Token" id="Token" />
 		</form>
 	</div>
@@ -71,7 +71,7 @@ else
 	<script>
 		grecaptcha.ready(function() {
 			grecaptcha.execute("@recaptchaKey", { action: "comment" }).then(function (token) {
-				$("#Token").val(token);
+				document.querySelector("#Token").val(token);
 			});
 		});
 	</script>
