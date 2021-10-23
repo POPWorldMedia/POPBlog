@@ -8,60 +8,86 @@
 	<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 	<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 	<script src="~/lib/tinymce/tinymce.min.js"></script>
-	<script language="javascript" type="text/javascript">
-			$(function() {
+    <script language="javascript" type="text/javascript">
+	    var ready = (callback) => {
+          if (document.readyState != "loading") callback();
+          else document.addEventListener("DOMContentLoaded", callback);
+        }
+			ready(() => {
 				populateFolders();
-				$("#DeleteButton").click(performDelete);
-				$("#AddButton").click(performAdd);
+				document.querySelector("#DeleteButton").addEventListener("click", () => performDelete());
+				document.querySelector("#AddButton").addEventListener("click", () => performAdd());
 			});
 
 			function populateFolders() {
-				$.getJSON("/Admin/GetFolderList/", function (result) {
-					var folderList = $("#FolderList");
-					folderList.empty();
-					if (result.length === 0) {
-						folderList.append($("<option />").text("No folders to delete."));
-						folderList.attr("disabled", true);
-						$("#DeleteButton").attr("disabled", true);
-					}
-					else {
-						folderList.attr("disabled", false);
-						$("#DeleteButton").attr("disabled", false);
-						$.each(result, function () {
-							folderList.append($("<option />").val(this.imageFolderID).text(this.name));
-						});
-					}
-				});
+				fetch("/Admin/GetFolderList/")
+				.then(response => { return response.json(); })
+					.then(result => {
+					    var folderList = document.querySelector("#FolderList");
+					    folderList.innerHTML = "";
+					    if (result.length === 0) {
+						    folderList.appendChild(makeNode("<option>No folders to delete.</option>"));
+						    folderList.setAttribute("disabled", "true");
+						    document.querySelector("#DeleteButton").setAttribute("disabled", "true");
+					    }
+					    else {
+						    folderList.removeAttribute("disabled");
+						    document.querySelector("#DeleteButton").removeAttribute("disabled");
+						    result.forEach(i => {
+							    folderList.appendChild(makeNode("<option value='" + i.imageFolderID + "'>" + i.name + "</option>"));
+						    });
+					    }
+				    });
 			}
 
 			function performDelete() {
 				if (confirm("Are you sure you want to delete?")) {
-				$.post("/Admin/DeleteImageFolder", { imageFolderID: $("#FolderList").val() }, function (result) {
-					populateFolders();
-				});
+				    fetch("/Admin/DeleteImageFolder", {
+		                method: "POST",
+		                headers: {
+			                'Content-Type': 'application/json'
+		                },
+		                body: JSON.stringify({ imageFolderID: document.querySelector("#FolderList").value })
+						})
+						.then(() => populateFolders());
 				}
 			}
 
 			function performAdd() {
-				$.post("/Admin/AddImageFolder", { name: $("#AddFolderText").val() }, function (result) {
-					$("#AddFolderText").val("");
-					populateFolders();
-				});
+				fetch("/Admin/AddImageFolder", {
+		            method: "POST",
+		            headers: {
+			            'Content-Type': 'application/json'
+		            },
+		            body: JSON.stringify({ name: document.querySelector("#AddFolderText").value })
+					})
+					.then(() => {
+						populateFolders();
+						document.querySelector("#AddFolderText").value = "";
+					});
+			}
+			
+			function makeNode(html) {
+				var template = document.createElement('template');
+                template.innerHTML = html;
+				return template.content.firstChild;
 			}
 	</script>
 </head>
-<body>
-	<div class="p-3">
-		<div class="mb-3 align-items-center">
-			<div class="col-auto">Add: </div>
-			<div class="col-auto"><input id="AddFolderText" class="form-control" /></div>
-			<div class="col-auto"><input id="AddButton" name="AddButton" type="button" value="Add" class="btn btn-primary" /></div>
-		</div>
-		<div class="mb-3 align-items-center mt-3">
-			<div class="col-auto">Delete: </div>
-			<div class="col-auto"><select id="FolderList" class="form-control"></select></div>
-			<div class="col-auto"><input id="DeleteButton" name="DeleteButton" type="button" value="Delete" class="btn btn-primary" /></div>
-		</div>
+<body class="p-3">
+	<div class="mb-3">
+        <label class="form-label">Add</label>
+        <div class="row mb-3">
+			<div class="col-9"><input id="AddFolderText" class="form-control" /></div>
+            <div class="col-3"><input id="AddButton" name="AddButton" type="button" value="Add" class="btn btn-primary" /></div>
+        </div>
+	</div>
+	<div class="mb-3">
+        <label class="form-label">Delete</label>
+        <div class="row">
+		    <div class="col-9"><select id="FolderList" class="form-select"></select></div>
+            <div class="col-3"><input id="DeleteButton" name="DeleteButton" type="button" value="Delete" class="btn btn-primary" /></div>
+        </div>
 	</div>
 </body>
 </html>

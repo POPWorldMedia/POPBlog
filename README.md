@@ -19,9 +19,9 @@ https://www.nuget.org/packages/PopBlog.Mvc/
 https://www.npmjs.com/package/@popworldmedia/popblog  
 
 The latest CI build NuGet package feed for the MVC project is here:  
-https://www.myget.org/F/popblog/api/v3/index.json 
+https://www.myget.org/F/popblog/api/v3/index.json   
 
-[![Build Status](https://dev.azure.com/popw/POP%20Blog/_apis/build/status/POP%20Blog-ASP.NET%20Core-CI?branchName=main)](https://dev.azure.com/popw/POP%20Blog/_build/latest?definitionId=6&branchName=main)
+[![Build Status](https://dev.azure.com/popw/POP%20Blog/_apis/build/status/POP%20Blog-ASP.NET%20Core-CI?branchName=main)](https://dev.azure.com/popw/POP%20Blog/_build/latest?definitionId=6&branchName=main)  
 
 The latest CI Build npm package feed for the meager script needs is here:  
 https://www.myget.org/F/popblog/npm/  

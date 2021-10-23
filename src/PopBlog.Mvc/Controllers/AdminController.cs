@@ -146,16 +146,16 @@ namespace PopBlog.Mvc.Controllers
 		}
 
 		[HttpPost("/Admin/AddImageFolder")]
-		public async Task<IActionResult> AddImageFolder(ImageFolder imageFolder)
+		public async Task<IActionResult> AddImageFolder([FromBody] ImageFolder imageFolder)
 		{
 			await _imageService.CreateImageFolder(imageFolder);
 			return new EmptyResult();
 		}
 
 		[HttpPost("/Admin/DeleteImageFolder")]
-		public async Task<IActionResult> DeleteImageFolder(int imageFolderID)
+		public async Task<IActionResult> DeleteImageFolder([FromBody] ImageFolder imageFolder)
 		{
-			await _imageService.DeleteImageFolder(imageFolderID);
+			await _imageService.DeleteImageFolder(imageFolder.ImageFolderID);
 			return new EmptyResult();
 		}
 

@@ -12,65 +12,77 @@
 	<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
 	<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
 	<script src="~/lib/tinymce/tinymce.min.js"></script>
-	<script language="javascript" type="text/javascript">
+    <script language="javascript" type="text/javascript">
+	    var ready = (callback) => {
+          if (document.readyState != "loading") callback();
+          else document.addEventListener("DOMContentLoaded", callback);
+        }
 		var imageID = "";
-		$(function () {
-			var folderSelect = $("#FolderList");
+		ready(() => {
+			var folderSelect = document.querySelector("#FolderList");
 			getImages(0);
-			folderSelect.on("change", function () {
-				getImages(this.value);
+			folderSelect.addEventListener("change", (event) => {
+				getImages(event.target.value);
 			});
-			$("#SelectionButton").click(function () {
+			document.querySelector("#SelectionButton").addEventListener("click", () => {
 				if (imageID != "")
 					window.parent.postMessage({ mceAction: "execCommand", cmd: "mceInsertContent", value: '<img src="/Post/Image/' + imageID + '" />' });
 				window.parent.postMessage({mceAction: "close"});
 			});
-			var newImageID = $("#NewImageID").val();
+			var newImageID = document.querySelector("#NewImageID").value;
 			if (newImageID != "") {
-				$.getJSON("/Admin/GetImageInfo/" + newImageID, function (result) {
+				fetch("/Admin/GetImageInfo/" + newImageID)
+				    .then(response => { return response.json(); })
+					.then(result => {
 					loadImage(result.imageID, result.fileName);
-					$("#FolderList").val(result.imageFolderID);
-					$("#FolderList").trigger("change");
+					document.querySelector("#FolderList").value = result.imageFolderID;
+					document.querySelector("#FolderList").dispatchEvent(new Event("change"));
 				});
 			}
 		});
 		function getImages(id) {
-			$.getJSON("/Admin/GetImages/" + id, populateImages);
+			fetch("/Admin/GetImages/" + id)
+			    .then(response => { return response.json(); })
+				.then(result => { populateImages(result) });
 		}
 		function populateImages(result) {
-			$("#List").empty();
-			$.each(result, function (i) {
-				$("<a/>").attr("href", "javascript:loadImage('" + this.imageID + "', '" + this.fileName + "')").html(this.fileName + "<br />").appendTo("#List");
+			document.querySelector("#List").innerHTML = "";
+			result.forEach(i => {
+				var html = '<div><a href="javascript:loadImage(\'' + i.imageID + '\', \'' + i.fileName + '\')">' + i.fileName + '</a></div>';
+				var template = document.createElement('template');
+                template.innerHTML = html;
+				document.querySelector("#List").appendChild(template.content.firstChild);
 			});
 		}
 		function loadImage(id, fileName) {
 			imageID = id;
-			$("#PreviewImage").attr("src", "/Post/Image/" + id);
-			$("#PreviewName").html(fileName);
+			document.querySelector("#PreviewImage").setAttribute("src", "/Post/Image/" + id);
+			document.querySelector("#PreviewName").innerHTML = fileName;
 		}
-	</script>
+	
+    </script>
 </head>
 <body>
-	<form asp-action="ImageManager" asp-controller="Admin" enctype="multipart/form-data" method="POST" class="px-3">
+	<form asp-action="ImageManager" asp-controller="Admin" enctype="multipart/form-data" method="POST" class="px-3 w-100">
 		<input type="hidden" id="NewImageID" name="NewImageID" value="@ViewBag.NewImageID" />
 		<div id="ImageManager" class="row" style="height:470px;">
-			<div id="Navigator" class="col col-3 border-right">
-				<small>Folder:</small> @Html.DropDownList("FolderList", folders)
+			<div id="Navigator" class="col col-3 border-end">
+				<small>Folder:</small> @Html.DropDownList("FolderList", folders, new {@class = "form-select"})
 				<div id="List" style="font-size:75%;overflow-y:auto;max-height: 400px;"></div>
 			</div>
 			<div class="col col-9">
-				<div id="Upload">
-					<small>Upload to current folder:</small>
-					<input type="file" id="ImageUpload" name="ImageUpload" class="col-4" />
-					<input type="submit" value="Upload" class="ml-3 btn btn-primary" />
+				<small>Upload to current folder:</small>
+				<div class="row" id="Upload">
+                    <div class="col-8"><input type="file" id="ImageUpload" name="ImageUpload" class="form-control" /></div>
+                    <div class="col-4"><input type="submit" value="Upload" class="ms-3 btn btn-primary" /></div>
 				</div>
-				<div id="Preview" class="overflow-auto" style="max-height: 420px;">
+				<div id="Preview" class="overflow-auto row" style="max-height: 420px;">
 					<p id="PreviewName"></p>
 					<img id="PreviewImage" alt="" src="" />
 				</div>
 			</div>
 		</div>
-		<div class="row m-2 float-right">
+		<div class="row m-2 float-end">
 			<input id="SelectionButton" name="SelectionButton" type="button" value="OK" class="btn btn-primary" />
 		</div>
 	</form>
