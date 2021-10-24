@@ -4,8 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using PopBlog.Mvc.Models;
 using PopBlog.Mvc.Repositories;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace PopBlog.Mvc.Services
 {
@@ -13,6 +18,7 @@ namespace PopBlog.Mvc.Services
 	{
 		Task<IEnumerable<Post>> GetLast20LiveAndPublic();
 		Task Create(Post post, string fileName, Stream stream);
+		Task CreatePhotoPost(Post post, string fileName, byte[] bytes, Func<int, string> imageUrlMaker);
 		Task Update(Post post, string fileName, Stream stream);
 		string MakeUrlString(string text);
 		Task<IEnumerable<Post>> GetLast20();
@@ -30,16 +36,20 @@ namespace PopBlog.Mvc.Services
 		private readonly IPostRepository _postRepository;
 		private readonly IConfig _config;
 		private readonly ITimeAdjustService _timeAdjustService;
-		private readonly ICommentRepository _commentRepository;
 		private readonly IStorageRepository _storageRepository;
+		private readonly IImageFolderRepository _imageFolderRepository;
+		private readonly IImageRepository _imageRepository;
+		private readonly ITextParsingService _textParsingService;
 
-		public PostService(IPostRepository postRepository, IConfig config, ITimeAdjustService timeAdjustService, ICommentRepository commentRepository, IStorageRepository storageRepository)
+		public PostService(IPostRepository postRepository, IConfig config, ITimeAdjustService timeAdjustService, IStorageRepository storageRepository, IImageFolderRepository imageFolderRepository, IImageRepository imageRepository, ITextParsingService textParsingService)
 		{
 			_postRepository = postRepository;
 			_config = config;
 			_timeAdjustService = timeAdjustService;
-			_commentRepository = commentRepository;
 			_storageRepository = storageRepository;
+			_imageFolderRepository = imageFolderRepository;
+			_imageRepository = imageRepository;
+			_textParsingService = textParsingService;
 		}
 
 		public async Task<IEnumerable<Post>> GetLast20LiveAndPublic()
@@ -58,6 +68,68 @@ namespace PopBlog.Mvc.Services
 				await ProcessUpload(post, fileName, stream);
 			await SetUrlTitle(post);
 			await _postRepository.Create(post);
+		}
+
+		public async Task CreatePhotoPost(Post post, string fileName, byte[] bytes, Func<int, string> imageUrlMaker)
+		{
+			if (string.IsNullOrEmpty(post.FullText))
+				post.FullText = string.Empty;
+			else
+				post.FullText = _textParsingService.UnrestrictedParse(post.FullText);
+			post.TimeStamp = _timeAdjustService.GetReverseAdjustedTime(post.TimeStamp);
+			if (bytes != null && bytes.Length > 0 && fileName != null)
+				await PersistPhoto(post, fileName, bytes, imageUrlMaker);
+			await SetUrlTitle(post);
+			await _postRepository.Create(post);
+		}
+
+		private async Task PersistPhoto(Post post, string fileName, byte[] bytes, Func<int, string> imageUrlMaker)
+		{
+			var folderID = await _imageFolderRepository.GetPhotoPostFolderID();
+			string mimeType;
+			var ext = Path.GetExtension(fileName);
+			switch (ext)
+			{
+				case ".jpg":
+				case ".jpeg":
+					mimeType = "image/jpeg";
+					break;
+				case ".gif":
+					mimeType = "image/gif";
+					break;
+				case ".png":
+					mimeType = "image/png";
+					break;
+				default:
+					throw new Exception("File upload type unknown.");
+			}
+
+			await using (var stream = new MemoryStream(bytes))
+			using (var i = SixLabors.ImageSharp.Image.Load<Rgba32>(stream))
+			await using (var output = new MemoryStream())
+			{
+				var options = new ResizeOptions
+				{
+					Size = new Size(1000, 1000),
+					Mode = ResizeMode.Max
+				};
+				i.Mutate(x => x
+					.Resize(options)
+					.GaussianSharpen(0.5f));
+				await i.SaveAsync(output, new JpegEncoder { Quality = 70 });
+				bytes = output.ToArray();
+			}
+
+			var image = new Models.Image
+			{
+				FileName = fileName,
+				ImageFolderID = folderID,
+				MimeType = mimeType,
+				TimeStamp = DateTime.UtcNow
+			};
+			var imageID = await _imageRepository.Create(bytes, image);
+			var imageUrl = imageUrlMaker(imageID);
+			post.FullText += $"<p style=\"text-align:center;\"><img src=\"{imageUrl}\" /></p>";
 		}
 
 		private async Task ProcessUpload(Post post, string fileName, Stream stream)

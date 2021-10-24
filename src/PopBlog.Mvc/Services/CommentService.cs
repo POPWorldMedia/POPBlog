@@ -53,7 +53,7 @@ namespace PopBlog.Mvc.Services
 			if (post == null || post.IsClosed)
 				return 0;
 			int? userID = null;
-			if (_contextAccessor.HttpContext.User?.Identity?.Name != null)
+			if (_contextAccessor.HttpContext?.User.Identity?.Name != null)
 			{
 				var user = await _userRepository.GetUserByName(_contextAccessor.HttpContext.User.Identity.Name);
 				name = user.Name;
@@ -68,7 +68,7 @@ namespace PopBlog.Mvc.Services
 			}
 			if (string.IsNullOrEmpty(name))
 				name = "Anonymous";
-			var ip = _contextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
+			var ip = _contextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
 			var timeStamp = DateTime.UtcNow;
 			var comment = new Comment
 			{

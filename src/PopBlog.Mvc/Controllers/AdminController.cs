@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Net.Http.Headers;
 using PopBlog.Mvc.Models;
 using PopBlog.Mvc.Services;
@@ -49,6 +48,12 @@ namespace PopBlog.Mvc.Controllers
 			return View(post);
 		}
 
+		[HttpGet("/admin/newphotopost")]
+		public IActionResult NewPhotoPost()
+		{
+			return View();
+		}
+
 		[DisableRequestSizeLimit]
 		[HttpPost("/admin/newpost")]
 		public async Task<IActionResult> NewPost(Post post, IFormFile podcastFile)
@@ -56,6 +61,24 @@ namespace PopBlog.Mvc.Controllers
 			var user = await _userService.GetUserByName(User.Identity.Name);
 			post.UserID = user.UserID;
 			await _postService.Create(post, podcastFile?.FileName, podcastFile?.OpenReadStream());
+			return RedirectToAction("Index", "Admin");
+		}
+
+		[DisableRequestSizeLimit]
+		[HttpPost("/admin/newphotopost")]
+		public async Task<IActionResult> NewPhotoPost(Post post, IFormFile photoFile)
+		{
+			var user = await _userService.GetUserByName(User.Identity.Name);
+			post.UserID = user.UserID;
+			post.Name = user.Name;
+			post.TimeStamp = _timeAdjustService.GetAdjustedTime(DateTime.UtcNow);
+			post.IsLive = true;
+			string ImagePathMaker(int id) => Url.Action("Image", "Post", new {id});
+			var stream = photoFile.OpenReadStream();
+			var length = (int)stream.Length;
+			var bytes = new byte[length];
+			stream.Read(bytes, 0, length);
+			await _postService.CreatePhotoPost(post, photoFile.FileName, bytes, ImagePathMaker);
 			return RedirectToAction("Index", "Admin");
 		}
 

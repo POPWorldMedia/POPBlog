@@ -10,8 +10,9 @@ namespace PopBlog.Mvc.Repositories
 	public interface IImageFolderRepository
 	{
 		Task<IEnumerable<ImageFolder>> GetAll();
-		Task Create(ImageFolder imageFolder);
+		Task<int> Create(ImageFolder imageFolder);
 		Task Delete(int imageFolderID);
+		Task<int> GetPhotoPostFolderID();
 	}
 
 	public class ImageFolderRepository : IImageFolderRepository
@@ -30,16 +31,31 @@ namespace PopBlog.Mvc.Repositories
 			return list.ToArray();
 		}
 
-		public async Task Create(ImageFolder imageFolder)
+		public async Task<int> Create(ImageFolder imageFolder)
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
-			await connection.ExecuteAsync("INSERT INTO ImageFolders (Name, ParentImageFolderID) VALUES (@Name, @ParentImageFolderID)", imageFolder);
+			var imageFolderID = await connection.QuerySingleAsync<int>("INSERT INTO ImageFolders (Name, ParentImageFolderID) VALUES (@Name, @ParentImageFolderID);SELECT CAST(SCOPE_IDENTITY() as int)", imageFolder);
+			return imageFolderID;
 		}
 
 		public async Task Delete(int imageFolderID)
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
 			await connection.ExecuteAsync("DELETE FROM ImageFolders WHERE ImageFolderID = @ImageFolderID", new {ImageFolderID = imageFolderID});
+		}
+
+		public async Task<int> GetPhotoPostFolderID()
+		{
+			const string folderName = "Photo Posts";
+			var folders = await GetAll();
+			var folder = folders.SingleOrDefault(x => x.Name == folderName);
+			if (folder == null)
+			{
+				var imageFolder = new ImageFolder { Name = folderName };
+				imageFolder.ImageFolderID = await Create(imageFolder);
+				folder = imageFolder;
+			}
+			return folder.ImageFolderID;
 		}
 	}
 }
