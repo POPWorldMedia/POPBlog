@@ -4,13 +4,19 @@ This is a lightweight blog app that uses ASP.NET v6, SQL Server and Azure storag
 
 ## About this project
 
-This is based roughly on my personal blog, which was first posted in the late aughts as an ASP.NET Webforms app, eventually converted to MVC and then ASP.NET Core after that. It's a little crusty, but it's super simple. It's not a SPA because the public side is all text, and the admin side is too simple to bother. I open sourced it because I needed a basic aggregator for a few projects, and wanted to use a Razor class library and just override the layout with the appropriate header and CSS to skin it as necessary.
+This is based roughly on my personal blog, which was first posted in the late aughts as an ASP.NET Webforms app, eventually converted to MVC and then ASP.NET Core after that. It's a little crusty in places, but it's super simple. It's not a SPA because the public side is all text, and the admin side is too simple to bother. I open sourced it because I needed a basic aggregator for a few projects, and wanted to use a Razor class library and just override the layout with the appropriate header and CSS to skin it as necessary.
+
+## New in v3
+
+* Updated all of the bits to .NET 6, Bootstrap 5 and removed jQuery.
+* New feature: Simplified photo post form for quick (mobile) posts with a photo, automatically resized for blog use.
+* Cleaned up UI in a bunch of places, including cleaner comment display.
 
 ## Getting started
 
-Run the database project by passing your database connection string as the only parameter, and dbup will magically make the schema current.
+Run the database project by passing your database connection string as the only parameter, and dbup will magically make the schema current. You can specify the connection string in `/Properties/launchSettings.json`.
 
-The MVC project can be used as a class library to feed your web app by referencing the project. Override views with your own markup in the web project, along with your assets and such. Even better, go the package route.
+The MVC project can be used as a class library to feed your web app by referencing the project. Even better, reference the packages (see below). Override views with your own markup in the web project if you need to (particularly the `/Views/Shared/_Layout.cshtml` file, for custom header and footer, for example), along with your assets and such. Mimic the stuff in `Program.cs` for the back end and the `gulpfile.js` for the front end, as seen in the `PopBlog.Web` project.
 
 ## Go the package route
 
@@ -20,12 +26,12 @@ https://www.npmjs.com/package/@popworldmedia/popblog
 
 The latest CI build NuGet package feed for the MVC project is here:  
 https://www.myget.org/F/popblog/api/v3/index.json   
-  
-[![Build Status](https://dev.azure.com/popw/POP%20Blog/_apis/build/status/POP%20Blog-ASP.NET%20Core-CI?branchName=main)](https://dev.azure.com/popw/POP%20Blog/_build/latest?definitionId=6&branchName=main)  
 
 The latest CI Build npm package feed for the meager script needs is here:  
 https://www.myget.org/F/popblog/npm/  
-You'll need to do copying of the various files, which the project views expect to be in `/lib/{packagename}`.  
+You'll need to do copying of the various files, which the project views expect to be in `/lib/{packagename}`. 
+  
+[![CI Build Status](https://dev.azure.com/popw/POP%20Blog/_apis/build/status/POP%20Blog-ASP.NET%20Core-CI?branchName=main)](https://dev.azure.com/popw/POP%20Blog/_build/latest?definitionId=6&branchName=main)   
 
 ## Upload size limits
 
@@ -33,8 +39,8 @@ If you plan to use the podcast serving mechanism and run the app on an IIS-based
 
 ## What's in `appsettings.json`?
 
-* `PopBlogConnectionString`: The connection string to your database. For local dev, use something like `server=localhost;Database=popblog;Trusted_Connection=True;`.
-* `ReCaptchaSiteKey` and `ReCaptchaSecretKey`: You'll need these from [Google reCAPTCHA](https://www.google.com/recaptcha) to help avoid comment spam.
+* `PopBlogConnectionString`: The connection string to your database. For local dev, use something like `server=localhost;Database=popblog;Trusted_Connection=True;TrustServerCertificate=True;`.
+* `ReCaptchaSiteKey` and `ReCaptchaSecretKey`: You'll need these from [Google reCAPTCHA](https://www.google.com/recaptcha) to help reduce comment spam.
 * `BlogTitle`: This appears after a hyphen on all of the page `<title>` tags.
 * `BlogDescription`: This appears in the `<h1>` of the blog home page, and in front of the hyphen on the home page `<title>`.
 * `TimeZone`: And integer represnting the time zone you want all of the times to be set for. For example, `-5` is US Eastern Time. It will adjust during Daylight Saving.
