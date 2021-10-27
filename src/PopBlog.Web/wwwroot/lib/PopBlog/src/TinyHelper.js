@@ -23,6 +23,7 @@ function initEditor(id) {
 		selector: id,
 		relative_urls: false,
 		plugins: ["lists", "code", "link", "image"],
+		browser_spellcheck: true,
 		contextmenu: false,
 		content_css: ['/lib/bootstrap/dist/css/bootstrap.min.css','/lib/PopBlog/dist/edit.min.css'],
 
