@@ -54,7 +54,7 @@ namespace PopBlog.Mvc.Controllers
 				}
 			}
 			var stream = new MemoryStream(await _imageService.GetImageData(image.ImageID));
-			Response.Headers.Add("Cache-Control", "public");
+			Response.Headers.Add("Cache-Control", "private");
 			Response.Headers.Add("Last-Modified", image.TimeStamp.ToString("r"));
 			return File(stream, image.MimeType);
 		}
