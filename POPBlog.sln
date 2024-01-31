@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C8316C5B-3622-4274-AD9F-F4A3CF28F2CB}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PopBlog.Mvc", "src\PopBlog.Mvc\PopBlog.Mvc.csproj", "{21D8DDC4-8FAA-49DC-B5E9-0FC579F2C199}"
