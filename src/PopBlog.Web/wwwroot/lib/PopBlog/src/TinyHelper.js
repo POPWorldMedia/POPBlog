@@ -26,6 +26,7 @@ function initEditor(id) {
 		browser_spellcheck: true,
 		contextmenu: false,
 		content_css: ['/lib/bootstrap/dist/css/bootstrap.min.css','/lib/PopBlog/dist/edit.min.css'],
+		promotion: false,
 
 		menubar: "edit insert view format table tools",
 		toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent bullist numlist | imgmgr imgfoldermgr | link image code",

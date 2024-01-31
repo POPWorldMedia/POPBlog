@@ -19,7 +19,7 @@
 			<td><a asp-action="Detail" asp-controller="Content" asp-route-id="@content.ContentID" target="_blank">@content.Title</a></td>
 			<td>@content.LastUpdated</td>
 			<td>
-				<form asp-controller="Admin" asp-action="DeleteContent" asp-route-id="@content.ContentID">
+				<form asp-controller="Admin" asp-action="DeletePost" asp-route-id="@content.ContentID">
 					<input type="submit" value="Delete" class="btn btn-primary"/>
 				</form>
 			</td>
