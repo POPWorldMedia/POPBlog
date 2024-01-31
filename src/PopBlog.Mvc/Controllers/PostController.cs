@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PopBlog.Mvc.Models;
 using PopBlog.Mvc.Services;
@@ -54,8 +55,8 @@ namespace PopBlog.Mvc.Controllers
 				}
 			}
 			var stream = new MemoryStream(await _imageService.GetImageData(image.ImageID));
-			Response.Headers.Add("Cache-Control", "private");
-			Response.Headers.Add("Last-Modified", image.TimeStamp.ToString("r"));
+			Response.Headers.Append("Cache-Control", "private");
+			Response.Headers.Append("Last-Modified", image.TimeStamp.ToString("r"));
 			return File(stream, image.MimeType);
 		}
 
