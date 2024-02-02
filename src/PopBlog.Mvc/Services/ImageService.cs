@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using PopBlog.Mvc.Models;
 using PopBlog.Mvc.Repositories;
@@ -15,6 +16,7 @@ namespace PopBlog.Mvc.Services
 		Task<int> CreateImage(byte[] bytes, string fileName, string mimeType, int? imageFolderID);
 		Task<Image> GetImage(int imageID);
 		Task<byte[]> GetImageData(int imageID);
+		Task<ResponseStream> GetImageStream(int imageID);
 	}
 
 	public class ImageService : IImageService
@@ -66,9 +68,15 @@ namespace PopBlog.Mvc.Services
 			return await _imageRepository.GetImage(imageID);
 		}
 
+		[Obsolete("Use GetImageStream(int) instead.")]
 		public async Task<byte[]> GetImageData(int imageID)
 		{
 			return await _imageRepository.GetImageData(imageID);
+		}
+		
+		public async Task<ResponseStream> GetImageStream(int imageID)
+		{
+			return await _imageRepository.GetImageStream(imageID);
 		}
 	}
 }

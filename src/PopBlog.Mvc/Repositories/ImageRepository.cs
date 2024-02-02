@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.SqlClient;
@@ -13,6 +16,7 @@ namespace PopBlog.Mvc.Repositories
 		Task<int> Create(byte[] bytes, Image image);
 		Task<Image> GetImage(int imageID);
 		Task<byte[]> GetImageData(int imageID);
+		Task<ResponseStream> GetImageStream(int imageID);
 	}
 
 	public class ImageRepository : IImageRepository
@@ -56,11 +60,29 @@ namespace PopBlog.Mvc.Repositories
 			return image;
 		}
 
+		[Obsolete("Use GetImageStream(int) instead.")]
 		public async Task<byte[]> GetImageData(int imageID)
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
 			var image = await connection.QuerySingleOrDefaultAsync<byte[]>("SELECT ImageBytes FROM Images WHERE ImageID = @ImageID", new { ImageID = imageID });
+			
 			return image;
+		}
+		
+		public async Task<ResponseStream> GetImageStream(int imageID)
+		{
+			var connection = new SqlConnection(_config.ConnectionString);
+			var command = new SqlCommand("SELECT ImageBytes FROM Images WHERE ImageID = @ImageID", connection);
+			command.Parameters.AddWithValue("ImageID", imageID);
+			connection.Open();
+			var reader = await command.ExecuteReaderAsync(CommandBehavior.SequentialAccess);
+			if (await reader.ReadAsync() && !await reader.IsDBNullAsync(0))
+			{
+				var stream = reader.GetStream(0);
+				var responseStream = new ResponseStream(reader, connection, stream);
+				return responseStream;
+			}
+			return default;
 		}
 	}
 }

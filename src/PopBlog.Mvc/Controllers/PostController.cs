@@ -54,10 +54,12 @@ namespace PopBlog.Mvc.Controllers
 					return Content(string.Empty);
 				}
 			}
-			var stream = new MemoryStream(await _imageService.GetImageData(image.ImageID));
+
+			var responseStream = await _imageService.GetImageStream(image.ImageID);
 			Response.Headers.Append("Cache-Control", "private");
 			Response.Headers.Append("Last-Modified", image.TimeStamp.ToString("r"));
-			return File(stream, image.MimeType);
+			Response.RegisterForDispose(responseStream);
+			return File(responseStream.Stream, image.MimeType);
 		}
 
 		[HttpPost("/post/addcomment")]
