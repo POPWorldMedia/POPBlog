@@ -17,13 +17,13 @@ steps:
   displayName: 'Restore'
   inputs:
     command: 'restore'
-    projects: 'src/POPBlog.sln'
+    projects: 'POPBlog.sln'
 
 - task: DotNetCoreCLI@2
   displayName: 'Build'
   inputs:
     command: 'build'
-    projects: 'src/POPBlog.sln'
+    projects: 'POPBlog.sln'
     arguments: '--configuration $(buildConfiguration) --no-restore'
 
 - task: PublishBuildArtifacts@1
