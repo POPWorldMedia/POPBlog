@@ -77,7 +77,7 @@ namespace PopBlog.Mvc.Controllers
 			var stream = photoFile.OpenReadStream();
 			var length = (int)stream.Length;
 			var bytes = new byte[length];
-			stream.Read(bytes, 0, length);
+			await stream.ReadExactlyAsync(bytes, 0, length);
 			await _postService.CreatePhotoPost(post, photoFile.FileName, bytes, ImagePathMaker);
 			return RedirectToAction("Index", "Admin");
 		}
@@ -131,7 +131,7 @@ namespace PopBlog.Mvc.Controllers
 			if (!string.IsNullOrEmpty(Request.Form["FolderList"]) && Request.Form["FolderList"] != "0")
 				imageFolderID = Convert.ToInt32(Request.Form["FolderList"]);
 			byte[] bytes = new byte[(int)file.Length];
-			await file.OpenReadStream().ReadAsync(bytes, 0, (int)file.Length);
+			await file.OpenReadStream().ReadExactlyAsync(bytes, 0, (int)file.Length);
 			string mimeType;
 			var ext = System.IO.Path.GetExtension(fileName);
 			switch (ext)
