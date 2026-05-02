@@ -30,7 +30,7 @@ steps:
     projects: 'POPBlog.sln'
     arguments: '--configuration $(buildConfiguration) --no-restore'
 
-- script: dotnet pack src/PopBlog.Mvc/PopBlog.Mvc.csproj --configuration $(buildConfiguration) --no-build --version-suffix "pre.$(Build.BuildId)" --output $(Build.ArtifactStagingDirectory)
+- script: dotnet pack src/PopBlog.Mvc/PopBlog.Mvc.csproj --configuration $(buildConfiguration) --no-restore --version-suffix "pre.$(Build.BuildId)" --output $(Build.ArtifactStagingDirectory)
   displayName: 'Pack'
 
 - script: dotnet nuget push "$(Build.ArtifactStagingDirectory)/**/*.nupkg" --source $(MYGET_SOURCE) --api-key $(MYGET_API_KEY) --skip-duplicate
