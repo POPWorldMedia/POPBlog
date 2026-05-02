@@ -39,13 +39,13 @@ steps:
     nobuild: true
     versioningScheme: 'off'
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   displayName: 'Push to MyGet'
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
     nuGetFeedType: 'external'
-    publishFeedCredentials: 'MyGet'
+    externalEndpoints: 'MyGet'
 
 - task: PublishBuildArtifacts@1
   inputs:
