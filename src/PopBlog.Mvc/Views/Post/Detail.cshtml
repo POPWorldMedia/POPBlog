@@ -7,6 +7,15 @@
 	ViewBag.IsDetail = true;
 }
 
+@if (Model.Post.SocialImageUrl != null)
+{
+	@section Head {
+		<meta property="og:image" content="@Model.Post.SocialImageUrl" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:image" content="@Model.Post.SocialImageUrl" />
+	}
+}
+
 @Html.Partial("_Post", Model.Post)
 
 <a name="comments"></a>

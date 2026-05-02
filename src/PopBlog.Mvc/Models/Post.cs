@@ -20,5 +20,6 @@ namespace PopBlog.Mvc.Models
 		public int DownloadCount { get; set; }
 		public string Length { get; set; }
 		public int Size { get; set; }
+		public string SocialImageUrl { get; set; }
 	}
 }

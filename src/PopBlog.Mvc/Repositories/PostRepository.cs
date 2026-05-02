@@ -39,13 +39,13 @@ namespace PopBlog.Mvc.Repositories
 		public async Task Create(Post post)
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
-			await connection.ExecuteAsync("INSERT INTO Posts (UserID, Title, FullText, TimeStamp, Replies, IsPrivate, IsClosed, IsLive, UrlTitle, Name, IsPodcastPost, FileName, DownloadCount, Length, Size) VALUES (@UserID, @Title, @FullText, @TimeStamp, @Replies, @IsPrivate, @IsClosed, @IsLive, @UrlTitle, @Name, @IsPodcastPost, @FileName, @DownloadCount, @Length, @Size)", post);
+			await connection.ExecuteAsync("INSERT INTO Posts (UserID, Title, FullText, TimeStamp, Replies, IsPrivate, IsClosed, IsLive, UrlTitle, Name, IsPodcastPost, FileName, DownloadCount, Length, Size, SocialImageUrl) VALUES (@UserID, @Title, @FullText, @TimeStamp, @Replies, @IsPrivate, @IsClosed, @IsLive, @UrlTitle, @Name, @IsPodcastPost, @FileName, @DownloadCount, @Length, @Size, @SocialImageUrl)", post);
 		}
 
 		public async Task Update(Post post)
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
-			await connection.ExecuteAsync("UPDATE Posts SET Title = @Title, FullText = @FullText, TimeStamp = @TimeStamp, IsPrivate = @IsPrivate, IsClosed = @IsClosed, IsLive = @IsLive, UrlTitle = @UrlTitle, Name = @Name, IsPodcastPost = @IsPodcastPost, FileName = @FileName, DownloadCount = @DownloadCount, Length = @Length, Size = @Size WHERE PostID = @PostID", post);
+			await connection.ExecuteAsync("UPDATE Posts SET Title = @Title, FullText = @FullText, TimeStamp = @TimeStamp, IsPrivate = @IsPrivate, IsClosed = @IsClosed, IsLive = @IsLive, UrlTitle = @UrlTitle, Name = @Name, IsPodcastPost = @IsPodcastPost, FileName = @FileName, DownloadCount = @DownloadCount, Length = @Length, Size = @Size, SocialImageUrl = @SocialImageUrl WHERE PostID = @PostID", post);
 		}
 
 		public async Task<IEnumerable<Post>> GetPostsThatUrlStartWith(string urlTitle)

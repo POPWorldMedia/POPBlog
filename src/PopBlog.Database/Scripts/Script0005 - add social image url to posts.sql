@@ -1,0 +1,1 @@
+ALTER TABLE Posts ADD SocialImageUrl NVARCHAR(256) NULL;

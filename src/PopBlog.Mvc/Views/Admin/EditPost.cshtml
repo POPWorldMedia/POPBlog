@@ -45,6 +45,7 @@
 		<input type="file" class="form-control" id="PodcastFile" name="PodcastFile">
 	</div>
 
+	@await Html.PartialAsync("_SocialImagePicker", Model)
 	<input type="submit" value="Save" class="btn btn-primary mb-3" />
 </form>
 

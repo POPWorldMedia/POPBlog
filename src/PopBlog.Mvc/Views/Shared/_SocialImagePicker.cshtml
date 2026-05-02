@@ -1,0 +1,101 @@
+@model PopBlog.Mvc.Models.Post
+<div class="mb-3">
+	<label class="form-label">Social Image</label>
+	<div class="input-group">
+		<input asp-for="SocialImageUrl" class="form-control" readonly placeholder="None" />
+		<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#socialImageModal">Choose</button>
+		<button type="button" class="btn btn-outline-secondary" id="ClearSocialImage">Clear</button>
+	</div>
+</div>
+
+<div class="modal fade" id="socialImageModal" tabindex="-1">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Choose Social Image</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body p-0">
+				<div class="row g-0" style="height:420px;">
+					<div class="col-3 border-end p-2">
+						<select id="SocialImageFolderList" class="form-select form-select-sm mb-2"></select>
+						<div id="SocialImageList" style="font-size:85%;overflow-y:auto;max-height:360px;"></div>
+					</div>
+					<div class="col-9 p-2 overflow-auto" style="max-height:420px;">
+						<p id="SocialImageModalName" class="text-muted small mb-1"></p>
+						<img id="SocialImageModalImg" alt="" src="" style="max-width:100%;" />
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-primary" id="SocialImageSelectButton">Select</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+(function () {
+	var selectedImageID = "";
+	var foldersLoaded = false;
+	var baseUrl = "@($"{Context.Request.Scheme}://{Context.Request.Host}")";
+	var modal = document.getElementById("socialImageModal");
+
+	modal.addEventListener("show.bs.modal", function () {
+		if (foldersLoaded) return;
+		foldersLoaded = true;
+		fetch("/Admin/GetFolderList")
+			.then(function (r) { return r.json(); })
+			.then(function (folders) {
+				var select = document.getElementById("SocialImageFolderList");
+				var rootOpt = document.createElement("option");
+				rootOpt.value = "0";
+				rootOpt.text = "Root Folder";
+				select.appendChild(rootOpt);
+				folders.forEach(function (f) {
+					var opt = document.createElement("option");
+					opt.value = f.imageFolderID;
+					opt.text = f.name;
+					select.appendChild(opt);
+				});
+				loadImages(0);
+			});
+	});
+
+	document.getElementById("SocialImageFolderList").addEventListener("change", function () {
+		loadImages(this.value);
+	});
+
+	function loadImages(folderId) {
+		fetch("/Admin/GetImages/" + folderId)
+			.then(function (r) { return r.json(); })
+			.then(function (images) {
+				var list = document.getElementById("SocialImageList");
+				list.innerHTML = "";
+				images.forEach(function (i) {
+					var a = document.createElement("a");
+					a.href = "javascript:void(0)";
+					a.textContent = i.fileName;
+					a.style.display = "block";
+					a.addEventListener("click", function () {
+						selectedImageID = i.imageID;
+						document.getElementById("SocialImageModalImg").src = baseUrl + "/Post/Image/" + i.imageID;
+						document.getElementById("SocialImageModalName").textContent = i.fileName;
+					});
+					list.appendChild(a);
+				});
+			});
+	}
+
+	document.getElementById("SocialImageSelectButton").addEventListener("click", function () {
+		if (selectedImageID !== "")
+			document.getElementById("SocialImageUrl").value = baseUrl + "/Post/Image/" + selectedImageID;
+		bootstrap.Modal.getInstance(modal).hide();
+	});
+
+	document.getElementById("ClearSocialImage").addEventListener("click", function () {
+		selectedImageID = "";
+		document.getElementById("SocialImageUrl").value = "";
+	});
+})();
+</script>
