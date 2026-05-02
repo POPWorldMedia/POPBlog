@@ -38,6 +38,7 @@ steps:
     configuration: $(buildConfiguration)
     nobuild: true
     versioningScheme: 'off'
+    arguments: '--version-suffix "pre.$(Build.BuildId)"'
 
 - script: dotnet nuget push "$(Build.ArtifactStagingDirectory)/**/*.nupkg" --source $(MYGET_SOURCE) --api-key $(MYGET_API_KEY) --skip-duplicate
   displayName: 'Push to MyGet'
