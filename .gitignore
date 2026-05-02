@@ -12,4 +12,5 @@ node_modules
 *.user
 .idea
 src/PopBlog.Web/appsettings.Development.json
+src/PopBlog.Mvc/wwwroot/
 .DS_Store

@@ -1,4 +1,4 @@
-﻿function launchImageManager() {
+function launchImageManager() {
 	tinymce.activeEditor.windowManager.openUrl({
 		url: "/Admin/ImageManager",
 		title: "Insert Image",
@@ -25,7 +25,7 @@ function initEditor(id) {
 		plugins: ["lists", "code", "link", "image"],
 		browser_spellcheck: true,
 		contextmenu: false,
-		content_css: ['/lib/bootstrap/dist/css/bootstrap.min.css','/lib/PopBlog/dist/edit.min.css'],
+		content_css: ['/PopBlog/lib/bootstrap/dist/css/bootstrap.min.css','/PopBlog/dist/edit.min.css'],
 		promotion: false,
 
 		menubar: "edit insert view format table tools",

@@ -13,6 +13,10 @@
 	  <RepositoryUrl>https://github.com/POPWorldMedia/POPBlog</RepositoryUrl>
 	  <Copyright>2026, POP World Media, LLC</Copyright>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <StaticWebAssetBasePath>/PopBlog</StaticWebAssetBasePath>
+	  <AssignTargetPathsDependsOn>NpmGulpBuild;$(AssignTargetPathsDependsOn)</AssignTargetPathsDependsOn>
+	  <DefineStaticWebAssetsDependsOn>NpmGulpBuild;$(DefineStaticWebAssetsDependsOn)</DefineStaticWebAssetsDependsOn>
+	  <ResolveStaticWebAssetsInputsDependsOn>NpmGulpBuild;$(ResolveStaticWebAssetsInputsDependsOn)</ResolveStaticWebAssetsInputsDependsOn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,5 +30,19 @@
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>
+
+  <!-- Exclude source/build files from NuGet package content -->
+  <ItemGroup>
+    <Content Remove="package.json" />
+    <Content Remove="package-lock.json" />
+    <Content Remove="Client\**" />
+    <None Include="package.json" />
+    <None Include="package-lock.json" />
+  </ItemGroup>
+
+  <Target Name="NpmGulpBuild">
+    <Exec Command="npm install" WorkingDirectory="$(MSBuildProjectDirectory)" Condition="!Exists('$(MSBuildProjectDirectory)/node_modules')" />
+    <Exec Command="npx gulp" WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
 
 </Project>
