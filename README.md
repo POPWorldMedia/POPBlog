@@ -16,20 +16,15 @@ This is based roughly on my personal blog, which was first posted in the late au
 
 Run the database project by passing your database connection string as the only parameter, and dbup will magically make the schema current. You can specify the connection string in `/Properties/launchSettings.json`.
 
-The MVC project can be used as a class library to feed your web app by referencing the project. Even better, reference the packages (see below). Override views with your own markup in the web project if you need to (particularly the `/Views/Shared/_Layout.cshtml` file, for custom header and footer, for example), along with your assets and such. Mimic the stuff in `Program.cs` for the back end and the `gulpfile.js` for the front end, as seen in the `PopBlog.Web` project.
+The MVC project can be used as a class library to feed your web app by referencing the project. Even better, reference the packages (see below). Override views with your own markup in the web project if you need to (particularly the `/Views/Shared/_Layout.cshtml` file, for custom header and footer, for example), along with your assets and such. Mimic the stuff in `Program.cs` for the back end, as seen in the `PopBlog.Web` project.
 
 ## Go the package route
 
 The latest release packages are here:  
-https://www.nuget.org/packages/PopBlog.Mvc/  
-https://www.npmjs.com/package/@popworldmedia/popblog  
+https://www.nuget.org/packages/PopBlog.Mvc/   
 
-The latest CI build NuGet package feed for the MVC project is here:  
-https://www.myget.org/F/popblog/api/v3/index.json   
-
-The latest CI Build npm package feed for the meager script needs is here:  
-https://www.myget.org/F/popblog/npm/  
-You'll need to do copying of the various files, which the project views expect to be in `/lib/{packagename}`. 
+The latest CI build NuGet package feed for the MVC project is here (includes front-end assets):  
+https://nuget.pkg.github.com/POPWorldMedia/index.json   
   
 [![CI Build Status](https://dev.azure.com/popw/POP%20Blog/_apis/build/status/POP%20Blog-ASP.NET%20Core-CI?branchName=main)](https://dev.azure.com/popw/POP%20Blog/_build/latest?definitionId=6&branchName=main)   
 
