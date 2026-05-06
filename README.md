@@ -26,7 +26,7 @@ https://www.nuget.org/packages/PopBlog.Mvc/
 The latest CI build NuGet package feed for the MVC project is here (includes front-end assets):  
 https://nuget.pkg.github.com/POPWorldMedia/index.json   
   
-[![CI Build Status](https://dev.azure.com/popw/POP%20Blog/_apis/build/status/POP%20Blog-ASP.NET%20Core-CI?branchName=main)](https://dev.azure.com/popw/POP%20Blog/_build/latest?definitionId=6&branchName=main)   
+[![Build Status](https://dev.azure.com/popw/POP%20Blog/_apis/build/status%2FPOPWorldMedia.POPBlog?branchName=main)](https://dev.azure.com/popw/POP%20Blog/_build/latest?definitionId=16&branchName=main)   
 
 ## Upload size limits
 
