@@ -33,8 +33,8 @@ steps:
 - script: dotnet pack src/PopBlog.Mvc/PopBlog.Mvc.csproj --configuration $(buildConfiguration) --no-restore --version-suffix "pre.$(Build.BuildId)" --output $(Build.ArtifactStagingDirectory)
   displayName: 'Pack'
 
-- script: dotnet nuget push "$(Build.ArtifactStagingDirectory)/**/*.nupkg" --source $(MYGET_SOURCE) --api-key $(MYGET_API_KEY) --skip-duplicate
-  displayName: 'Push to MyGet'
+- script: dotnet nuget push "$(Build.ArtifactStagingDirectory)/**/*.nupkg" --source https://nuget.pkg.github.com/POPWorldMedia/index.json --api-key $(GITHUB_TOKEN) --skip-duplicate
+  displayName: 'Push to GitHub Packages'
 
 - task: PublishBuildArtifacts@1
   inputs:
