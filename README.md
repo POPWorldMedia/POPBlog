@@ -1,16 +1,14 @@
 # POP Blog
 
-This is a lightweight blog app that uses ASP.NET v6, SQL Server and Azure storage for podcast files.
+This is a lightweight blog app that uses ASP.NET v10, SQL Server and Azure storage for podcast files.
 
 ## About this project
 
 This is based roughly on my personal blog, which was first posted in the late aughts as an ASP.NET Webforms app, eventually converted to MVC and then ASP.NET Core after that. It's a little crusty in places, but it's super simple. It's not a SPA because the public side is all text, and the admin side is too simple to bother. I open sourced it because I needed a basic aggregator for a few projects, and wanted to use a Razor class library and just override the layout with the appropriate header and CSS to skin it as necessary.
 
-## New in v3
+## New in v4
 
-* Updated all of the bits to .NET 6, Bootstrap 5 and removed jQuery.
-* New feature: Simplified photo post form for quick (mobile) posts with a photo, automatically resized for blog use.
-* Cleaned up UI in a bunch of places, including cleaner comment display.
+* Updated all of the bits to .NET 10, Bootstrap 5.x.
 
 ## Getting started
 
