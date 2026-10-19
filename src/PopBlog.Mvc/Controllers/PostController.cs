@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using PopBlog.Mvc.Models;
 using PopBlog.Mvc.Services;
 
@@ -89,8 +91,19 @@ namespace PopBlog.Mvc.Controllers
 			var link = await _postService.GetDownloadLink(id);
 			if (string.IsNullOrEmpty(link))
 				return StatusCode(404);
-			await _postService.IncrementDownloadCount(id);
+			// HEAD only asks about the file, and a tiny range starting at 0 is a client probing for size and
+			// range support before the real request, so neither is a download.
+			if (HttpMethods.IsGet(Request.Method) && !IsProbeRange(Request.GetTypedHeaders().Range))
+				await _postService.IncrementDownloadCount(id);
 			return Redirect(link);
+		}
+
+		public static bool IsProbeRange(RangeHeaderValue range)
+		{
+			if (range == null || range.Unit != "bytes" || range.Ranges.Count != 1)
+				return false;
+			var item = range.Ranges.First();
+			return item.From == 0 && item.To <= 1;
 		}
 	}
 }
