@@ -17,10 +17,10 @@ dotnet run
 # https://localhost:5001 / http://localhost:5000
 ```
 
-**Frontend assets** (run from `src/PopBlog.Web` after `npm install`):
+**Frontend assets** (run from `src/PopBlog.Mvc`; also runs automatically during `dotnet build`):
 ```bash
 npm install
-npx gulp        # copies Bootstrap/TinyMCE, transpiles/minifies JS and CSS
+npm run build   # esbuild: minifies Client/*.js and *.css, copies Bootstrap/TinyMCE into wwwroot/lib
 ```
 
 **Run tests:**
@@ -64,9 +64,8 @@ Controllers → Services → Repositories → SQL Server (via Dapper)
 
 ### Frontend
 
-Gulp (`gulpfile.js` in `PopBlog.Web`) handles:
+`build.js` in `PopBlog.Mvc` (esbuild, invoked by the `BuildFrontendAssets` MSBuild target) handles:
 - Copying Bootstrap 5 and TinyMCE 6 into `wwwroot/lib/`
-- Babel-transpiling and uglifying custom JS → `wwwroot/lib/PopBlog/dist/`
-- Minifying custom CSS with source maps
+- Minifying `Client/*.js` (with source maps) and `Client/*.css` → `wwwroot/dist/`
 
 TinyMCE is the rich-text editor for post creation/editing in the admin UI.

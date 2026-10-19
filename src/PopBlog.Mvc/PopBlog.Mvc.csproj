@@ -14,9 +14,9 @@
 	  <Copyright>2026, POP World Media, LLC</Copyright>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <StaticWebAssetBasePath>/PopBlog</StaticWebAssetBasePath>
-	  <AssignTargetPathsDependsOn>NpmGulpBuild;$(AssignTargetPathsDependsOn)</AssignTargetPathsDependsOn>
-	  <DefineStaticWebAssetsDependsOn>NpmGulpBuild;$(DefineStaticWebAssetsDependsOn)</DefineStaticWebAssetsDependsOn>
-	  <ResolveStaticWebAssetsInputsDependsOn>NpmGulpBuild;$(ResolveStaticWebAssetsInputsDependsOn)</ResolveStaticWebAssetsInputsDependsOn>
+	  <AssignTargetPathsDependsOn>BuildFrontendAssets;$(AssignTargetPathsDependsOn)</AssignTargetPathsDependsOn>
+	  <DefineStaticWebAssetsDependsOn>BuildFrontendAssets;$(DefineStaticWebAssetsDependsOn)</DefineStaticWebAssetsDependsOn>
+	  <ResolveStaticWebAssetsInputsDependsOn>BuildFrontendAssets;$(ResolveStaticWebAssetsInputsDependsOn)</ResolveStaticWebAssetsInputsDependsOn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,10 +24,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.27.0" />
-    <PackageReference Include="Dapper" Version="2.1.72" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.30.1" />
+    <PackageReference Include="Dapper" Version="2.1.89" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="4.1.3" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>
 
@@ -35,14 +35,25 @@
   <ItemGroup>
     <Content Remove="package.json" />
     <Content Remove="package-lock.json" />
+    <Content Remove="build.js" />
     <Content Remove="Client\**" />
     <None Include="package.json" />
     <None Include="package-lock.json" />
+    <None Include="build.js" />
   </ItemGroup>
 
-  <Target Name="NpmGulpBuild">
+  <ItemGroup>
+    <FrontendAssetInput Include="Client\**" />
+    <FrontendAssetInput Include="build.js" />
+    <FrontendAssetInput Include="package.json" />
+  </ItemGroup>
+
+  <!-- Minifies Client/*.js and *.css into wwwroot/dist and copies vendored node_modules assets
+       into wwwroot/lib before static web assets are scanned. Inputs/Outputs make this a no-op
+       when nothing relevant changed. -->
+  <Target Name="BuildFrontendAssets" Inputs="@(FrontendAssetInput)" Outputs="wwwroot\dist\TinyHelper.min.js">
     <Exec Command="npm install" WorkingDirectory="$(MSBuildProjectDirectory)" Condition="!Exists('$(MSBuildProjectDirectory)/node_modules')" />
-    <Exec Command="npx gulp" WorkingDirectory="$(MSBuildProjectDirectory)" />
+    <Exec Command="node build.js" WorkingDirectory="$(MSBuildProjectDirectory)" />
   </Target>
 
 </Project>

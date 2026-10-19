@@ -1,20 +1,14 @@
 {
 	"name": "popblog",
 	"version": "4.0.0",
-	"scripts": {},
+	"scripts": {
+		"build": "node build.js"
+	},
 	"dependencies": {
-		"bootstrap": "5.3.2",
-		"tinymce": "6.8.2"
+		"bootstrap": "5.3.8",
+		"tinymce": "8.10.0"
 	},
 	"devDependencies": {
-		"gulp": "4.0.2",
-		"merge-stream": "2.0.0",
-		"gulp-cssmin": "0.2.0",
-		"gulp-uglify": "3.0.2",
-		"gulp-babel": "8.0.0",
-		"@babel/core": "7.12.9",
-		"@babel/preset-env": "7.12.7",
-		"gulp-sourcemaps": "3.0.0",
-		"gulp-rename": "2.0.0"
+		"esbuild": "0.28.2"
 	}
 }

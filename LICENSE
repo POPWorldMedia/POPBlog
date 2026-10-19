@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2020 POP World Media, LLC
+Copyright (c) 2026 POP World Media, LLC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+This license applies to POP Blog's own source code. Third-party components
+distributed with it remain under their own licenses, including:
+
+* TinyMCE (src/PopBlog.Mvc/wwwroot/lib/tinymce), licensed under the GNU General
+  Public License v2 or later. See license.md in that folder for its full terms.
+* Bootstrap (src/PopBlog.Mvc/wwwroot/lib/bootstrap), licensed under the MIT License.

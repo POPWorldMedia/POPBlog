@@ -8,7 +8,12 @@ This is based roughly on my personal blog, which was first posted in the late au
 
 ## New in v4
 
-* Updated all of the bits to .NET 10, Bootstrap 5.x.
+* Updated all of the bits to .NET 10, Bootstrap 5.x, TinyMCE 8.
+* Front-end assets are built with esbuild instead of Gulp.
+
+## Third-party licenses
+
+The admin editor uses [TinyMCE](https://www.tiny.cloud/), which is bundled in the `PopBlog.Mvc` package under `wwwroot/lib/tinymce` and is licensed under the **GNU General Public License v2 or later**, not MIT. POP Blog configures it with `license_key: "gpl"`, which means agreeing to those terms. If the GPL doesn't work for your project, a commercial TinyMCE license is available from Tiny. Bootstrap is MIT licensed.
 
 ## Getting started
 

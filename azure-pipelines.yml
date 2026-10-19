@@ -8,6 +8,21 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+# Must run before "dotnet build": static web assets are scanned during the build, so
+# wwwroot/dist and wwwroot/lib have to be in place first. The Mvc project's
+# BuildFrontendAssets target also runs "node build.js", so node_modules must exist regardless.
+- task: UseNode@1
+  displayName: 'Use Node.js'
+  inputs:
+    version: '24.x'
+
+- script: |
+    set -e
+    npm install
+    npm run build
+  displayName: 'Build Mvc front-end assets'
+  workingDirectory: 'src/PopBlog.Mvc'
+
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
