@@ -5,11 +5,17 @@
 }
 @section header
 {
+	<script src="~/PopBlog/dist/ImageResizer.min.js"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			ImageResizer.attach(document.querySelector("#PhotoPostForm"), document.querySelector("#PhotoFile"), document.querySelector("#PhotoError"));
+		});
+	</script>
 }
 
 <h1>New Photo Post</h1>
 
-<form asp-action="NewPhotoPost" method="POST" enctype="multipart/form-data">
+<form id="PhotoPostForm" asp-action="NewPhotoPost" method="POST" enctype="multipart/form-data">
 	<div class="mb-3">
 		<label for="Title">Title</label>
 		<input asp-for="Title" class="form-control" />
@@ -19,7 +25,8 @@
 	</div>
 	<div class="mb-3">
 		<label for="PhotoFile">Photo</label>
-		<input type="file" class="form-control" id="PhotoFile" name="PhotoFile">
+		<input type="file" class="form-control" id="PhotoFile" name="PhotoFile" accept=".jpg,.jpeg,.png,.gif">
+		<div id="PhotoError" class="text-danger"></div>
 	</div>
 
 	<input type="submit" value="Save" class="btn btn-primary mb-3" />

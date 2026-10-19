@@ -7,10 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using PopBlog.Mvc.Models;
 using PopBlog.Mvc.Repositories;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
 namespace PopBlog.Mvc.Services
 {
@@ -87,7 +83,7 @@ namespace PopBlog.Mvc.Services
 		{
 			var folderID = await _imageFolderRepository.GetPhotoPostFolderID();
 			string mimeType;
-			var ext = Path.GetExtension(fileName);
+			var ext = Path.GetExtension(fileName).ToLowerInvariant();
 			switch (ext)
 			{
 				case ".jpg":
@@ -102,22 +98,6 @@ namespace PopBlog.Mvc.Services
 					break;
 				default:
 					throw new Exception("File upload type unknown.");
-			}
-
-			await using (var stream = new MemoryStream(bytes))
-			using (var i = SixLabors.ImageSharp.Image.Load<Rgba32>(stream))
-			await using (var output = new MemoryStream())
-			{
-				var options = new ResizeOptions
-				{
-					Size = new Size(1000, 1000),
-					Mode = ResizeMode.Max
-				};
-				i.Mutate(x => x
-					.Resize(options)
-					.GaussianSharpen(0.5f));
-				await i.SaveAsync(output, new JpegEncoder { Quality = 70 });
-				bytes = output.ToArray();
 			}
 
 			var image = new Models.Image
