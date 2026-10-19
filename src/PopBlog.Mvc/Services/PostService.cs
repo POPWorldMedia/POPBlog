@@ -30,17 +30,15 @@ namespace PopBlog.Mvc.Services
 	public class PostService : IPostService
 	{
 		private readonly IPostRepository _postRepository;
-		private readonly IConfig _config;
 		private readonly ITimeAdjustService _timeAdjustService;
 		private readonly IStorageRepository _storageRepository;
 		private readonly IImageFolderRepository _imageFolderRepository;
 		private readonly IImageRepository _imageRepository;
 		private readonly ITextParsingService _textParsingService;
 
-		public PostService(IPostRepository postRepository, IConfig config, ITimeAdjustService timeAdjustService, IStorageRepository storageRepository, IImageFolderRepository imageFolderRepository, IImageRepository imageRepository, ITextParsingService textParsingService)
+		public PostService(IPostRepository postRepository, ITimeAdjustService timeAdjustService, IStorageRepository storageRepository, IImageFolderRepository imageFolderRepository, IImageRepository imageRepository, ITextParsingService textParsingService)
 		{
 			_postRepository = postRepository;
-			_config = config;
 			_timeAdjustService = timeAdjustService;
 			_storageRepository = storageRepository;
 			_imageFolderRepository = imageFolderRepository;
@@ -165,6 +163,8 @@ namespace PopBlog.Mvc.Services
 				post.Size = originalPost.Size;
 			}
 			await _postRepository.Update(post);
+			if (!string.IsNullOrEmpty(originalPost.FileName) && originalPost.FileName != post.FileName)
+				await DeleteFileIfUnused(originalPost.FileName);
 		}
 
 		private async Task SetUrlTitle(Post post)
@@ -229,11 +229,9 @@ namespace PopBlog.Mvc.Services
 		public async Task<string> GetDownloadLink(int postID)
 		{
 			var post = await _postRepository.Get(postID);
-			if (post == null)
+			if (string.IsNullOrEmpty(post?.FileName))
 				return null;
-			var link = $"{_config.StorageAccountBaseUrl}/{_config.StorageContainerName}/{post.FileName}";
-			link = link.Replace("#", "%23");
-			return link;
+			return _storageRepository.GetUrl(post.FileName);
 		}
 
 		public async Task IncrementDownloadCount(int postID)
@@ -243,7 +241,17 @@ namespace PopBlog.Mvc.Services
 
 		public async Task Delete(int postID)
 		{
+			var post = await _postRepository.Get(postID);
 			await _postRepository.Delete(postID);
+			if (!string.IsNullOrEmpty(post?.FileName))
+				await DeleteFileIfUnused(post.FileName);
+		}
+
+		// Upload overwrites by file name, so two posts can point at the same file; only remove it once nothing does.
+		private async Task DeleteFileIfUnused(string fileName)
+		{
+			if (!await _postRepository.IsFileNameInUse(fileName))
+				await _storageRepository.Delete(fileName);
 		}
 	}
 }

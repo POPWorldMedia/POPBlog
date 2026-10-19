@@ -23,6 +23,7 @@ namespace PopBlog.Mvc.Repositories
 		Task UpdateReplies(int postID, int count);
 		Task IncrementDownloadCount(int postID);
 		Task Delete(int postID);
+		Task<bool> IsFileNameInUse(string fileName);
 	}
 
 	public class PostRepository : IPostRepository
@@ -117,6 +118,12 @@ namespace PopBlog.Mvc.Repositories
 		{
 			await using var connection = new SqlConnection(_config.ConnectionString);
 			await connection.ExecuteAsync("DELETE FROM Posts WHERE PostID = @PostID", new { PostID = postID });
+		}
+
+		public async Task<bool> IsFileNameInUse(string fileName)
+		{
+			await using var connection = new SqlConnection(_config.ConnectionString);
+			return await connection.ExecuteScalarAsync<bool>("SELECT CASE WHEN EXISTS (SELECT 1 FROM Posts WHERE FileName = @FileName) THEN 1 ELSE 0 END", new { FileName = fileName });
 		}
 	}
 }
