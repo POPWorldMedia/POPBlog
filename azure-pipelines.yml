@@ -5,7 +5,12 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
-  buildConfiguration: 'Release'
+- name: buildConfiguration
+  value: 'Release'
+- name: githubOwner
+  value: 'POPWorldMedia'
+# Holds GH_PACKAGES_TOKEN (secret): a GitHub classic PAT with write:packages and read:packages
+- group: popblog-github-packages
 
 steps:
 # Must run before "dotnet build": static web assets are scanned during the build, so
@@ -48,7 +53,18 @@ steps:
 - script: dotnet pack src/PopBlog.Mvc/PopBlog.Mvc.csproj --configuration $(buildConfiguration) --no-restore --version-suffix "pre.$(Build.BuildId)" --output $(Build.ArtifactStagingDirectory)
   displayName: 'Pack'
 
-- script: dotnet nuget push "$(Build.ArtifactStagingDirectory)/**/*.nupkg" --source https://nuget.pkg.github.com/POPWorldMedia/index.json --api-key $(GITHUB_TOKEN) --skip-duplicate
+- script: |
+    set -e
+    dotnet nuget add source \
+      --username $(githubOwner) \
+      --password "$(GH_PACKAGES_TOKEN)" \
+      --store-password-in-clear-text \
+      --name github \
+      "https://nuget.pkg.github.com/$(githubOwner)/index.json"
+    dotnet nuget push "$(Build.ArtifactStagingDirectory)/**/*.nupkg" \
+      --source github \
+      --api-key "$(GH_PACKAGES_TOKEN)" \
+      --skip-duplicate
   displayName: 'Push to GitHub Packages'
 
 - task: PublishBuildArtifacts@1
