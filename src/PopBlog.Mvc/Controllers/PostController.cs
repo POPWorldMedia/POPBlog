@@ -46,20 +46,32 @@ namespace PopBlog.Mvc.Controllers
 			var image = await _imageService.GetImage(id);
 			if (image == null)
 				return StatusCode(404);
-			if (!string.IsNullOrEmpty(Request.Headers["If-Modified-Since"]))
+			// Images are immutable once uploaded, so they can be cached by browsers and shared caches (CDNs) indefinitely.
+			// HTTP dates have one-second resolution, so truncate the stored (UTC) timestamp to match what we send.
+			var utc = DateTime.SpecifyKind(image.TimeStamp, DateTimeKind.Utc);
+			var lastModified = new DateTimeOffset(utc.AddTicks(-(utc.Ticks % TimeSpan.TicksPerSecond)));
+			var etag = new EntityTagHeaderValue($"\"img-{image.ImageID}-{lastModified.ToUnixTimeSeconds()}\"");
+
+			var responseHeaders = Response.GetTypedHeaders();
+			responseHeaders.CacheControl = new CacheControlHeaderValue
 			{
-				var provider = CultureInfo.InvariantCulture;
-				var lastMod = DateTime.ParseExact(Request.Headers["If-Modified-Since"], "r", provider);
-				if (lastMod == image.TimeStamp.AddMilliseconds(-image.TimeStamp.Millisecond))
-				{
-					Response.StatusCode = 304;
-					return Content(string.Empty);
-				}
-			}
+				Public = true,
+				MaxAge = TimeSpan.FromDays(365),
+				Extensions = { new NameValueHeaderValue("immutable") }
+			};
+			responseHeaders.LastModified = lastModified;
+			responseHeaders.ETag = etag;
+
+			// Answer conditional requests before opening the blob stream from the database.
+			var requestHeaders = Request.GetTypedHeaders();
+			var ifNoneMatch = requestHeaders.IfNoneMatch;
+			var notModified = ifNoneMatch is { Count: > 0 }
+				? ifNoneMatch.Any(x => x.Equals(EntityTagHeaderValue.Any) || x.Compare(etag, useStrongComparison: false))
+				: requestHeaders.IfModifiedSince is { } since && since >= lastModified;
+			if (notModified)
+				return StatusCode(StatusCodes.Status304NotModified);
 
 			var responseStream = await _imageService.GetImageStream(image.ImageID);
-			Response.Headers.Append("Cache-Control", "private");
-			Response.Headers.Append("Last-Modified", image.TimeStamp.ToString("r"));
 			Response.RegisterForDispose(responseStream);
 			return File(responseStream.Stream, image.MimeType);
 		}
