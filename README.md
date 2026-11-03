@@ -38,7 +38,7 @@ If you plan to use the podcast serving mechanism and run the app on an IIS-based
 ## What's in `appsettings.json`?
 
 * `PopBlogConnectionString`: The connection string to your database. For local dev, use something like `server=localhost;Database=popblog;Trusted_Connection=True;TrustServerCertificate=True;`.
-* `ReCaptchaSiteKey` and `ReCaptchaSecretKey`: You'll need these from [Google reCAPTCHA](https://www.google.com/recaptcha) to help reduce comment spam.
+* `TurnstileSiteKey` and `TurnstileSecretKey`: You'll need these from [Cloudflare Turnstile](https://www.cloudflare.com/application-services/products/turnstile/) to help reduce comment and login spam. The keys in `appsettings.json` are Cloudflare's test keys, which always pass.
 * `BlogTitle`: This appears after a hyphen on all of the page `<title>` tags.
 * `BlogDescription`: This appears in the `<h1>` of the blog home page, and in front of the hyphen on the home page `<title>`.
 * `TimeZone`: And integer represnting the time zone you want all of the times to be set for. For example, `-5` is US Eastern Time. It will adjust during Daylight Saving.

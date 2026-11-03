@@ -47,7 +47,7 @@ The solution has four projects:
 Controllers → Services → Repositories → SQL Server (via Dapper)
 
 - **Repositories** are thin Dapper wrappers over raw SQL. Each maps to one or two tables.
-- **Services** own business logic: image resizing (ImageSharp), audio metadata (TagLibSharp), RSS/podcast feed generation, reCAPTCHA validation, IP-ban checks, timezone conversion.
+- **Services** own business logic: image resizing (ImageSharp), audio metadata (TagLibSharp), RSS/podcast feed generation, Cloudflare Turnstile validation, IP-ban checks, timezone conversion.
 - **`StorageRepository`** wraps Azure Blob Storage for podcast audio files.
 - **`UserMiddleware`** runs on every request to populate user context for authorization.
 - **`Config`** (bound in `ServiceCollections.cs`) reads all application settings from `appsettings.json`.
@@ -57,7 +57,7 @@ Controllers → Services → Repositories → SQL Server (via Dapper)
 | Key | Purpose |
 |-----|---------|
 | `PopBlogConnectionString` | SQL Server connection |
-| `ReCaptchaSiteKey` / `ReCaptchaSecretKey` | Google reCAPTCHA for comment spam |
+| `TurnstileSiteKey` / `TurnstileSecretKey` | Cloudflare Turnstile for comment and login spam |
 | `StorageConnectionString` / `StorageContainerName` | Azure Blob Storage for podcasts |
 | `TimeZone` | UTC offset for display |
 | `IsUsingDirectDownload` | Skip download-counter redirect for large files |

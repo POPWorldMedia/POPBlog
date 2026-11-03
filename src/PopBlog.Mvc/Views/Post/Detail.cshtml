@@ -2,7 +2,7 @@
 @model PopBlog.Mvc.Models.PostDisplayContainer
 @inject IConfig Config
 @{
-	var recaptchaKey = Config.ReCaptchaSiteKey;
+	var turnstileKey = Config.TurnstileSiteKey;
 	ViewBag.Title = Model.Post.Title;
 	ViewBag.IsDetail = true;
 }
@@ -76,20 +76,16 @@ else
 				<label for="FullText" class="form-label"></label>
 				<textarea id="FullText" name="FullText" rows="10" class="form-control"></textarea>
 			</div>
+			@if (!User.Identity.IsAuthenticated)
+			{
+				<div class="cf-turnstile mb-3" data-sitekey="@turnstileKey" data-action="comment" data-appearance="interaction-only" data-response-field-name="Token"></div>
+			}
 			<button id="SendCommentButton" type="submit" class="btn btn-primary mb-3">Send comment</button>
-			<input type="hidden" name="Token" id="Token" />
 		</form>
 	</div>
 }
 
 @if (!User.Identity.IsAuthenticated)
 {
-	<script src="https://www.google.com/recaptcha/api.js?render=@recaptchaKey"></script>
-	<script>
-		grecaptcha.ready(function() {
-			grecaptcha.execute("@recaptchaKey", { action: "comment" }).then(function (token) {
-				document.querySelector("#Token").value = token;
-			});
-		});
-	</script>
+	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 }

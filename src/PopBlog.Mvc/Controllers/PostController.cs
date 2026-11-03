@@ -17,15 +17,15 @@ namespace PopBlog.Mvc.Controllers
 		private readonly IPostService _postService;
 		private readonly IImageService _imageService;
 		private readonly ICommentService _commentService;
-		private readonly IReCaptchaService _reCaptchaService;
+		private readonly ITurnstileService _turnstileService;
 		private readonly IIpBanService _ipBanService;
 
-		public PostController(IPostService postService, IImageService imageService, ICommentService commentService, IReCaptchaService reCaptchaService, IIpBanService ipBanService)
+		public PostController(IPostService postService, IImageService imageService, ICommentService commentService, ITurnstileService turnstileService, IIpBanService ipBanService)
 		{
 			_postService = postService;
 			_imageService = imageService;
 			_commentService = commentService;
-			_reCaptchaService = reCaptchaService;
+			_turnstileService = turnstileService;
 			_ipBanService = ipBanService;
 		}
 
@@ -73,7 +73,7 @@ namespace PopBlog.Mvc.Controllers
 			var ip = HttpContext.Connection.RemoteIpAddress.ToString();
 			if (!User.HasClaim(ClaimTypes.Role, "Admin"))
 			{
-				var recap = await _reCaptchaService.VerifyToken(comment.Token, ip);
+				var recap = await _turnstileService.VerifyToken(comment.Token, ip);
 				if (!recap.IsSuccess)
 					return StatusCode(403);
 				var isIpBanned = await _ipBanService.IsIpBanned(ip);

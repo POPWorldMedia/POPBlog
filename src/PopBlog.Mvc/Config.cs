@@ -6,8 +6,8 @@ namespace PopBlog.Mvc
 	public interface IConfig
 	{
 		string ConnectionString { get; }
-		string ReCaptchaSiteKey { get; }
-		string ReCaptchaSecretKey { get; }
+		string TurnstileSiteKey { get; }
+		string TurnstileSecretKey { get; }
 		string BlogTitle { get; }
 		string BlogDescription { get; }
 		double TimeZone { get; }
@@ -34,8 +34,8 @@ namespace PopBlog.Mvc
 		}
 
 		public string ConnectionString => _configuration["PopBlogConnectionString"];
-		public string ReCaptchaSiteKey => _configuration["ReCaptchaSiteKey"];
-		public string ReCaptchaSecretKey => _configuration["ReCaptchaSecretKey"];
+		public string TurnstileSiteKey => _configuration["TurnstileSiteKey"];
+		public string TurnstileSecretKey => _configuration["TurnstileSecretKey"];
 		public string BlogTitle => _configuration["BlogTitle"];
 		public string BlogDescription => _configuration["BlogDescription"];
 		public double TimeZone => Convert.ToDouble(_configuration["TimeZone"]);

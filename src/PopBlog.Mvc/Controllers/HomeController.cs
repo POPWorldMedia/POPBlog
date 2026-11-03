@@ -14,14 +14,14 @@ namespace PopBlog.Mvc.Controllers
 	public class HomeController : Controller
 	{
 		private readonly IUserService _userService;
-		private readonly IReCaptchaService _reCaptchaService;
+		private readonly ITurnstileService _turnstileService;
 		private readonly IPostService _postService;
 		private readonly IRssService _rssService;
 
-		public HomeController(IUserService userService, IReCaptchaService reCaptchaService, IPostService postService, IRssService rssService)
+		public HomeController(IUserService userService, ITurnstileService turnstileService, IPostService postService, IRssService rssService)
 		{
 			_userService = userService;
-			_reCaptchaService = reCaptchaService;
+			_turnstileService = turnstileService;
 			_postService = postService;
 			_rssService = rssService;
 		}
@@ -66,10 +66,10 @@ namespace PopBlog.Mvc.Controllers
 		public async Task<IActionResult> Login(string email, string password, string token)
 		{
 			var ip = HttpContext.Connection.RemoteIpAddress.ToString();
-			var reCaptchaResult = await _reCaptchaService.VerifyToken(token, ip);
-			if (!reCaptchaResult.IsSuccess)
+			var turnstileResult = await _turnstileService.VerifyToken(token, ip);
+			if (!turnstileResult.IsSuccess)
 			{
-				ModelState.AddModelError("token", $"I don't think you're for real. {reCaptchaResult.ErrorCodes.FirstOrDefault()}");
+				ModelState.AddModelError("token", $"I don't think you're for real. {turnstileResult.ErrorCodes.FirstOrDefault()}");
 				return View();
 			}
 			if (await _userService.IsValidUser(email, password))

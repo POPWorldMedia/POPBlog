@@ -2,7 +2,7 @@
 @inject IConfig Config;
 @{
 	ViewBag.Title = "Login";
-	var recaptchaKey = Config.ReCaptchaSiteKey;
+	var turnstileKey = Config.TurnstileSiteKey;
 }
 <h1>Login</h1>
 
@@ -17,14 +17,7 @@
 		<label for="password" class="form-label">Password</label>
 		<input type="password" id="password" name="password" class="form-control" />
 	</div>
-	<input type="hidden" name="Token" id="Token" />
+	<div class="cf-turnstile mb-3" data-sitekey="@turnstileKey" data-action="login" data-appearance="interaction-only" data-response-field-name="Token"></div>
 	<button type="submit" class="btn btn-primary mb-3">Login</button>
 </form>
-<script src="https://www.google.com/recaptcha/api.js?render=@recaptchaKey"></script>
-<script>
-	grecaptcha.ready(function() {
-		grecaptcha.execute("@recaptchaKey", { action: "signup" }).then(function (token) {
-			document.querySelector("#Token").value = token;
-		});
-	});
-</script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
