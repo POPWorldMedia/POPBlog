@@ -38,7 +38,7 @@ dotnet build POPBlog.sln
 The solution has four projects:
 
 - **`PopBlog.Mvc`** — Razor Class Library; the reusable blog engine. Contains all controllers, models, services, repositories, and views. Distributed as a NuGet package.
-- **`PopBlog.Web`** — The deployable ASP.NET Core 8 host. References `PopBlog.Mvc` as a project dependency and can override views/layouts. The entry point is `Program.cs`.
+- **`PopBlog.Web`** — The deployable ASP.NET Core 11 host. References `PopBlog.Mvc` as a project dependency and can override views/layouts. The entry point is `Program.cs`.
 - **`PopBlog.Database`** — Console app using DbUp; runs numbered SQL migration scripts in `/Scripts/` to create or upgrade the database schema.
 - **`PopBlog.Tests`** — xUnit test project.
 
